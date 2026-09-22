@@ -12,6 +12,14 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Fly Sky Travel & Tourism | Licensed Agency (LIC # LHR 10981)",
   description: "Official website of Fly Sky Travel & Tourism. Expert visa consultancy, worldwide flight ticketing, Umrah packages, and tour destinations.",
+  icons: {
+    icon: [
+      { url: "/navbarlogo.png", href: "/navbarlogo.png" },
+      { url: "/favicon.ico", href: "/favicon.ico" },
+    ],
+    shortcut: "/navbarlogo.png",
+    apple: "/navbarlogo.png",
+  },
 };
 
 export default function RootLayout({
