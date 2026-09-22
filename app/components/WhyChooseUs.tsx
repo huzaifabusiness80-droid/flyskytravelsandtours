@@ -1,92 +1,108 @@
 "use client";
 
-import { Award, Users, ShieldCheck, Clock, CheckCircle2 } from "lucide-react";
+interface FeatureItem {
+  id: string;
+  title: string;
+  description: string;
+  iconSvg: React.ReactNode;
+}
 
-const stats = [
-  { id: "exp", value: "15+", label: "Years Experience", icon: Clock },
-  { id: "clients", value: "12,000+", label: "Happy Travelers", icon: Users },
-  { id: "visa", value: "98%", label: "Visa Success Rate", icon: ShieldCheck },
-  { id: "lic", value: "LIC # LHR 10981", label: "Govt. Licensed Agency", icon: Award },
-];
-
-const reasons = [
+const features: FeatureItem[] = [
   {
-    title: "Government Licensed & Verified Agency",
-    description: "Fully registered and licensed agency under License # LHR 10981, guaranteeing 100% genuine visa and travel services.",
+    id: "hotels",
+    title: "Handpicked Hotels",
+    description: "Verified 3-star to 5-star accommodations near prime attractions, ensuring comfort and convenience.",
+    iconSvg: (
+      <svg className="w-28 h-28 sm:w-32 sm:h-32 mx-auto" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* Folded Map Paper - Sized & Centered Equally */}
+        <g transform="translate(10, 15)">
+          <path d="M10 25L38 12L66 25L94 12V78L66 91L38 78L10 91V25Z" fill="#FEE5B3" />
+          <path d="M38 12L66 25V91L38 78V12Z" fill="#FDD28B" />
+          <path d="M66 25L94 12V78L66 91V25Z" fill="#FEE5B3" />
+          {/* Red Location Pin */}
+          <path d="M52 18C44.268 18 38 24.268 38 32C38 43 52 60 52 60C52 60 66 43 66 32C66 24.268 59.732 18 52 18Z" fill="#EF4444" />
+          <circle cx="52" cy="31" r="5.5" fill="#FFFFFF" />
+        </g>
+      </svg>
+    ),
   },
   {
-    title: "Transparent & Competitive Pricing",
-    description: "No hidden charges or surprise costs. Clear breakdowns for flight tickets, visa processing, and tour packages.",
+    id: "service",
+    title: "World Class Service",
+    description: "Licensed travel experts with 24/7 dedicated support, seamless bookings, and trusted visa assistance.",
+    iconSvg: (
+      <svg className="w-28 h-28 sm:w-32 sm:h-32 mx-auto" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(12, 10)">
+          {/* Blue Globe */}
+          <circle cx="48" cy="56" r="38" fill="#1D9BF0" />
+          <ellipse cx="48" cy="56" rx="18" ry="38" stroke="#FFFFFF" strokeWidth="2.5" strokeOpacity="0.4" fill="none" />
+          <path d="M10 56H86" stroke="#FFFFFF" strokeWidth="2.5" strokeOpacity="0.4" />
+          <path d="M18 36H78" stroke="#FFFFFF" strokeWidth="2" strokeOpacity="0.3" />
+          <path d="M18 76H78" stroke="#FFFFFF" strokeWidth="2" strokeOpacity="0.3" />
+          {/* Red Location Marker */}
+          <path d="M66 16C58.82 16 53 21.82 53 29C53 39 66 54 66 54C66 54 79 39 79 29C79 21.82 73.18 16 66 16Z" fill="#FF4B26" />
+          <circle cx="66" cy="28" r="5" fill="#FFFFFF" />
+        </g>
+      </svg>
+    ),
   },
   {
-    title: "Dedicated 24/7 Customer Support",
-    description: "Our travel experts provide round-the-clock support before, during, and after your trip.",
-  },
-  {
-    title: "Fast-Track Visa Assistance",
-    description: "Expert guidance for UK, USA, Europe Schengen, Turkey, and UAE visas to maximize your approval chances.",
+    id: "price",
+    title: "Best Price Guarantee",
+    description: "Direct IATA airline rates, transparent fees, and unmatched value on domestic and international tours.",
+    iconSvg: (
+      <svg className="w-28 h-28 sm:w-32 sm:h-32 mx-auto" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(14, 8)">
+          {/* Hot Air Balloon Body */}
+          <path d="M46 10C26.1177 10 10 26.1177 10 46C10 61 28 76 39 83H53C64 76 82 61 82 46C82 26.1177 65.8823 10 46 10Z" fill="#22C55E" />
+          {/* Stripes */}
+          <path d="M46 10C36.5 10 29.5 25.5 29.5 46C29.5 60.5 39 83 39 83H53C53 83 62.5 60.5 62.5 46C62.5 25.5 55.5 10 46 10Z" fill="#FACC15" />
+          <path d="M46 10C42.5 10 40 25.5 40 46C40 60.5 44 83 44 83H48C48 83 52 60.5 52 46C52 25.5 49.5 10 46 10Z" fill="#FB923C" />
+          {/* Ropes & Basket */}
+          <path d="M39 83L41 92H51L53 83" stroke="#94A3B8" strokeWidth="2" />
+          <rect x="39" y="92" width="14" height="9" rx="2" fill="#EAB308" />
+        </g>
+      </svg>
+    ),
   },
 ];
 
 export default function WhyChooseUs() {
   return (
-    <section className="py-20 bg-white border-t border-slate-200">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-8">
+    <section className="py-16 sm:py-24 bg-white border-b border-slate-200">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Top Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#00a8e8]/10 text-[#00a8e8] font-bold text-xs uppercase tracking-wider rounded-md border border-[#00a8e8]/20">
-            <span>Why Choose Fly Sky</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0b3663] tracking-tight">
-            Your Trusted Travel & Tourism Partner
+        {/* Header (Exact Match with Reference UI) */}
+        <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-20">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
+            Why Choose Us
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-            We are committed to delivering world-class travel services with complete peace of mind, high visa approval rates, and reliable support.
+          <p className="text-slate-500 text-sm sm:text-base mt-2.5 font-normal">
+            Here are reasons you should plan trip with us
           </p>
         </div>
 
-        {/* Stats Strip */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-          {stats.map((stat) => {
-            const IconComp = stat.icon;
-            return (
-              <div 
-                key={stat.id}
-                className="bg-slate-50 p-6 rounded-xl border border-slate-200 text-center flex flex-col items-center justify-center space-y-2 shadow-none hover:border-[#00a8e8] transition-colors"
-              >
-                <div className="w-12 h-12 rounded-lg bg-[#00a8e8]/10 text-[#00a8e8] flex items-center justify-center">
-                  <IconComp className="w-6 h-6 stroke-[2.2]" />
-                </div>
-                <div className="text-2xl sm:text-3xl font-extrabold text-[#0b3663]">
-                  {stat.value}
-                </div>
-                <div className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                  {stat.label}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Reasons Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {reasons.map((reason, idx) => (
+        {/* 3-Column Feature Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 sm:gap-12 lg:gap-16 max-w-6xl mx-auto">
+          {features.map((item) => (
             <div 
-              key={idx}
-              className="bg-white p-7 rounded-xl border border-slate-200 flex gap-5 items-start hover:border-[#00a8e8] transition-colors shadow-none"
+              key={item.id}
+              className="text-center flex flex-col items-center group cursor-default"
             >
-              <div className="w-10 h-10 rounded-lg bg-[#e61c24]/10 text-[#e61c24] flex items-center justify-center shrink-0 mt-1">
-                <CheckCircle2 className="w-5 h-5" />
+              {/* Illustrated Icon: Equal Size & Prominently Large */}
+              <div className="mb-6 transform transition-transform duration-300 group-hover:-translate-y-1.5 flex items-center justify-center h-32 sm:h-36">
+                {item.iconSvg}
               </div>
-              <div className="space-y-1.5">
-                <h3 className="text-lg font-bold text-[#0b3663]">
-                  {reason.title}
-                </h3>
-                <p className="text-slate-600 text-sm leading-relaxed">
-                  {reason.description}
-                </p>
-              </div>
+
+              {/* Feature Title */}
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight mb-2.5">
+                {item.title}
+              </h3>
+
+              {/* Feature Description */}
+              <p className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-xs font-normal">
+                {item.description}
+              </p>
             </div>
           ))}
         </div>

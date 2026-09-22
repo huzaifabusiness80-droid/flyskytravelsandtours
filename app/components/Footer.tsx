@@ -42,19 +42,19 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm text-slate-300 font-medium">
               <li>
-                <Link href="#" className="hover:text-[#00a8e8] transition-colors">Home Page</Link>
+                <Link href="/" className="hover:text-[#00a8e8] transition-colors">Home Page</Link>
               </li>
               <li>
-                <Link href="#about" className="hover:text-[#00a8e8] transition-colors">About Us</Link>
+                <Link href="/about" className="hover:text-[#00a8e8] transition-colors">About Us</Link>
               </li>
               <li>
-                <Link href="#services" className="hover:text-[#00a8e8] transition-colors">Our Services</Link>
+                <Link href="/services" className="hover:text-[#00a8e8] transition-colors">All Services</Link>
               </li>
               <li>
-                <Link href="#tours" className="hover:text-[#00a8e8] transition-colors">Tour Packages</Link>
+                <Link href="/services/tour-packages" className="hover:text-[#00a8e8] transition-colors">Tour Packages</Link>
               </li>
               <li>
-                <Link href="#contact" className="hover:text-[#00a8e8] transition-colors">Contact Us</Link>
+                <Link href="/contact" className="hover:text-[#00a8e8] transition-colors">Contact Us</Link>
               </li>
             </ul>
           </div>
@@ -62,14 +62,27 @@ export default function Footer() {
           {/* Column 3: Travel Services */}
           <div className="space-y-4">
             <h4 className="text-sm font-bold uppercase tracking-wider text-[#00a8e8] border-b border-slate-700/60 pb-2">
-              Core Services
+              Our Core Services
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm text-slate-300 font-medium">
-              <li>Visit & Work Visa Consultancy</li>
-              <li>Domestic & International Air Ticketing</li>
-              <li>Executive & Economy Umrah Packages</li>
-              <li>Worldwide Tour Destinations</li>
-              <li>Hotel Reservations & Travel Insurance</li>
+              <li>
+                <Link href="/services/visa-processing" className="hover:text-[#00a8e8] transition-colors">Visa Processing & Consultancy</Link>
+              </li>
+              <li>
+                <Link href="/services/air-ticketing" className="hover:text-[#00a8e8] transition-colors">Air Ticketing & Flights</Link>
+              </li>
+              <li>
+                <Link href="/services/tour-packages" className="hover:text-[#00a8e8] transition-colors">Worldwide Tour Packages</Link>
+              </li>
+              <li>
+                <Link href="/services/umrah-services" className="hover:text-[#00a8e8] transition-colors">Executive Umrah Services</Link>
+              </li>
+              <li>
+                <Link href="/services/hotel-bookings" className="hover:text-[#00a8e8] transition-colors">Worldwide Hotel Bookings</Link>
+              </li>
+              <li>
+                <Link href="/services/travel-insurance" className="hover:text-[#00a8e8] transition-colors">Travel Insurance</Link>
+              </li>
             </ul>
           </div>
 

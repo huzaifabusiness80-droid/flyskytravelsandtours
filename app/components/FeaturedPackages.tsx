@@ -1,180 +1,216 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Clock, MapPin, Check, ArrowRight, Star } from "lucide-react";
+import Link from "next/link";
+import { Clock, Star } from "lucide-react";
 
 interface PackageItem {
   id: string;
   title: string;
-  destination: string;
+  category: string;
   duration: string;
   price: string;
+  originalPrice?: string;
   imageSrc: string;
-  tag: string;
-  includes: string[];
+  rating: number;
+  reviewsCount: number;
+  isSale?: boolean;
+  link?: string;
 }
 
 const packages: PackageItem[] = [
   {
-    id: "dubai",
-    title: "Dubai Deluxe Tour & City Explorer",
-    destination: "Dubai, UAE",
-    duration: "5 Days / 4 Nights",
-    price: "PKR 145,000*",
-    imageSrc: "/tours_service.jpg",
-    tag: "Best Seller",
-    includes: ["UAE Tourist Visa", "4-Star Hotel Stay", "Desert Safari & Dinner", "Airport Transfers"],
+    id: "dubai-deluxe",
+    title: "Dubai Deluxe Explorer",
+    category: "City Tours, Desert Safari, Burj Khalifa",
+    duration: "5 days",
+    price: "PKR 145,000",
+    originalPrice: "PKR 165,000",
+    imageSrc: "/destinations/dubai.jpg",
+    rating: 5,
+    reviewsCount: 28,
+    isSale: true,
+    link: "/services/tour-packages/dubai-tour",
   },
   {
-    id: "turkey",
-    title: "Istanbul & Cappadocia Wonders",
-    destination: "Turkey",
-    duration: "7 Days / 6 Nights",
-    price: "PKR 285,000*",
-    imageSrc: "/banner-1.png",
-    tag: "Top Rated",
-    includes: ["Turkey Sticker Visa", "Luxury Hotel Stay", "Bosphorus Cruise Tour", "Domestic Flight"],
+    id: "grand-turkey",
+    title: "Grand Turkey & Cappadocia",
+    category: "Istanbul, Bosphorus, Hot Air Balloon",
+    duration: "7 days",
+    price: "PKR 285,000",
+    imageSrc: "/destinations/turkey.jpg",
+    rating: 5,
+    reviewsCount: 34,
+    link: "/services/tour-packages/turkey-tour",
   },
   {
-    id: "baku",
-    title: "Baku Azerbaijan Grand Tour",
-    destination: "Baku, Azerbaijan",
-    duration: "5 Days / 4 Nights",
-    price: "PKR 165,000*",
-    imageSrc: "/banner-2.png",
-    tag: "Popular",
-    includes: ["Easy E-Visa Issue", "City Sightseeing", "Gabala Day Trip", "Daily Breakfast"],
+    id: "baku-azerbaijan",
+    title: "Baku & Gabala Mountain Tour",
+    category: "Shahdag Snow, City Tours, Historic",
+    duration: "5 days",
+    price: "PKR 165,000",
+    originalPrice: "PKR 185,000",
+    imageSrc: "/destinations/azerbaijan.jpg",
+    rating: 5,
+    reviewsCount: 19,
+    isSale: true,
+    link: "/services/tour-packages/baku-tour",
   },
   {
-    id: "umrah-exec",
-    title: "Executive 5-Star Umrah Package",
-    destination: "Makkah & Madinah",
-    duration: "14 Days / 13 Nights",
-    price: "PKR 340,000*",
-    imageSrc: "/visa_service.jpg",
-    tag: "Spiritual",
-    includes: ["Hotels Facing Haram", "Saudi Tourist/Umrah Visa", "VIP Transport", "Ziyarat Tours"],
+    id: "malaysia-escape",
+    title: "Discover Malaysia & Langkawi",
+    category: "Kuala Lumpur, Genting Cable Car, Beach",
+    duration: "6 days",
+    price: "PKR 195,000",
+    imageSrc: "/destinations/malaysia.jpg",
+    rating: 5,
+    reviewsCount: 22,
+    link: "/services/tour-packages",
   },
   {
-    id: "malaysia",
-    title: "Kuala Lumpur & Langkawi Escape",
-    destination: "Malaysia",
-    duration: "6 Days / 5 Nights",
-    price: "PKR 195,000*",
-    imageSrc: "/flight_service.jpg",
-    tag: "Trending",
-    includes: ["Malaysia E-Visa", "Beach Resort Stay", "Genting Cable Car", "Intercity Transfers"],
+    id: "thailand-island",
+    title: "Thailand Bangkok & Phuket",
+    category: "Island Hopping, City Tours, Beaches",
+    duration: "6 days",
+    price: "PKR 175,000",
+    imageSrc: "/destinations/thailand.jpg",
+    rating: 5,
+    reviewsCount: 16,
+    link: "/services/tour-packages",
   },
   {
-    id: "uk-tour",
-    title: "London & UK Experience Package",
-    destination: "United Kingdom",
-    duration: "8 Days / 7 Nights",
-    price: "PKR 490,000*",
-    imageSrc: "/banner-1.png",
-    tag: "Premium",
-    includes: ["UK Visa Consultancy", "Central London Hotel", "Hop-On Sightseeing", "Airport Pickup"],
+    id: "london-uk",
+    title: "London & UK Experience",
+    category: "Iconic Landmarks, Shopping, Urban",
+    duration: "8 days",
+    price: "PKR 490,000",
+    imageSrc: "/destinations/london.jpg",
+    rating: 5,
+    reviewsCount: 12,
+    link: "/services/visa-processing/uk-visa",
   },
 ];
 
 export default function FeaturedPackages() {
+  const [list, setList] = useState<PackageItem[]>(packages);
+
+  useEffect(() => {
+    fetch("/api/admin/packages")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+          const mapped: PackageItem[] = data.data.map((p: any) => ({
+            id: p.id,
+            title: p.title,
+            category: p.category || p.destination || p.badge || "Guided Tour",
+            duration: p.duration || "5 days",
+            price: p.price,
+            originalPrice: p.originalPrice,
+            imageSrc: p.imageSrc || p.image || "/destinations/dubai.jpg",
+            rating: p.rating || 5,
+            reviewsCount: p.reviewsCount || 20,
+            isSale: p.isSale !== undefined ? p.isSale : (p.badge?.toLowerCase().includes("sale") || false),
+            link: p.link || `/services/tour-packages/${p.slug}`,
+          }));
+          setList(mapped);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
-    <section id="tours" className="py-20 bg-slate-50 border-t border-slate-200">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-8">
+    <section id="tours" className="py-16 sm:py-20 bg-white border-b border-slate-200">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#e0f2fe] text-[#00a8e8] font-bold text-xs uppercase tracking-wider rounded-md border border-sky-200">
-            <span>Featured Travel Packages</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0b3663] tracking-tight">
-            Popular Tour Destinations & Packages
+        {/* Section Header (Consistent Style with Popular Destinations) */}
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
+            Featured Tour Packages
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-            Explore our curated international tour packages with all-inclusive hotel accommodations, guided tours, and visa assistance.
+          <p className="text-slate-500 text-sm sm:text-base mt-2.5 font-normal">
+            World&apos;s best international travel packages &amp; guided holidays
           </p>
         </div>
 
-        {/* Tour Packages Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {packages.map((pkg) => (
-            <div 
+        {/* 3-Column Grid matching the exact reference card design */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {list.map((pkg) => (
+            <Link
               key={pkg.id}
-              className="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:border-[#00a8e8] transition-all duration-300 group shadow-none"
+              href={pkg.link || "/services/tour-packages"}
+              className="bg-white rounded-lg border border-slate-200 overflow-hidden flex flex-col cursor-pointer transition-all duration-300 hover:shadow-md hover:border-slate-300 group"
             >
-              <div>
-                {/* Image Header */}
-                <div className="relative w-full h-56 bg-slate-900 overflow-hidden">
-                  <Image
-                    src={pkg.imageSrc}
-                    alt={pkg.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  
-                  {/* Tag Badge */}
-                  <div className="absolute top-4 left-4 bg-[#e61c24] text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-md shadow-none">
-                    {pkg.tag}
-                  </div>
+              {/* Image Container with Price Badge and Sale Tag */}
+              <div className="relative w-full aspect-[16/10] bg-slate-100 overflow-hidden">
+                <Image
+                  src={pkg.imageSrc}
+                  alt={pkg.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover w-full h-full transition-transform duration-500 ease-out group-hover:scale-105"
+                />
 
-                  {/* Destination Info on Image */}
-                  <div className="absolute bottom-4 left-4 right-4 text-white flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-xs font-semibold text-[#00a8e8]">
-                      <MapPin className="w-4 h-4 text-[#00a8e8]" />
-                      <span>{pkg.destination}</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-amber-400 text-xs font-bold">
-                      <Star className="w-3.5 h-3.5 fill-amber-400" />
-                      <span>4.9</span>
-                    </div>
-                  </div>
+                {/* Price Badge on Bottom Left of Image */}
+                <div className="absolute bottom-3 left-3 flex items-center gap-1.5 z-10">
+                  {pkg.originalPrice && (
+                    <span className="bg-black/60 backdrop-blur-xs text-white/80 line-through text-xs font-semibold px-2 py-1 rounded-xs">
+                      {pkg.originalPrice}
+                    </span>
+                  )}
+                  <span className="bg-[#e61c24] text-white text-xs sm:text-sm font-bold px-2.5 py-1 rounded-xs shadow-none">
+                    {pkg.price}
+                  </span>
                 </div>
 
-                {/* Content Body */}
-                <div className="p-6 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">
-                      <Clock className="w-3.5 h-3.5 text-[#00a8e8]" />
-                      {pkg.duration}
-                    </span>
-                    <span className="text-lg font-extrabold text-[#0b3663]">
-                      {pkg.price}
+                {/* Sale Tag on Top Right */}
+                {pkg.isSale && (
+                  <div className="absolute top-3 right-3 z-10">
+                    <span className="bg-[#00a8e8] text-white text-[11px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                      Sale
                     </span>
                   </div>
+                )}
+              </div>
 
-                  <h3 className="text-lg font-bold text-[#0b3663] group-hover:text-[#00a8e8] transition-colors leading-snug">
+              {/* Card Body (Clean, structured, matching reference design) */}
+              <div className="p-5 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="text-lg sm:text-xl font-medium text-slate-900 group-hover:text-[#00a8e8] transition-colors leading-snug">
                     {pkg.title}
                   </h3>
+                  <p className="text-xs sm:text-sm text-slate-500 mt-1 font-normal line-clamp-1">
+                    {pkg.category}
+                  </p>
+                </div>
 
-                  {/* Included List */}
-                  <div className="pt-3 border-t border-slate-100 space-y-2">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-2">
-                      Package Includes:
+                {/* Card Footer: Rating Stars + Duration */}
+                <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-medium">
+                  {/* Rating Stars & Reviews in Cyan/Teal color */}
+                  <div className="flex items-center gap-1.5 text-[#00a8e8]">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-3.5 h-3.5 ${
+                            i < pkg.rating ? "fill-[#00a8e8] text-[#00a8e8]" : "text-slate-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-slate-500 font-normal">
+                      {pkg.reviewsCount} reviews
                     </span>
-                    {pkg.includes.map((inc, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-xs font-medium text-slate-700">
-                        <Check className="w-3.5 h-3.5 text-[#00a8e8] shrink-0" />
-                        <span>{inc}</span>
-                      </div>
-                    ))}
+                  </div>
+
+                  {/* Duration with clock icon */}
+                  <div className="flex items-center gap-1 text-slate-600 font-normal">
+                    <Clock className="w-3.5 h-3.5 text-slate-400" />
+                    <span>{pkg.duration}</span>
                   </div>
                 </div>
               </div>
-
-              {/* Action Button (Strict NO SHADOW) */}
-              <div className="p-6 pt-0">
-                <a 
-                  href={`https://wa.me/923001871622?text=Hello%20Fly%20Sky%20Travels,%20I%20am%20interested%20in%20the%20${encodeURIComponent(pkg.title)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3 px-4 bg-[#0b3663] hover:bg-[#e61c24] text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-colors flex items-center justify-center gap-2 border-none outline-none shadow-none"
-                >
-                  <span>Inquire This Package</span>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </a>
-              </div>
-            </div>
+            </Link>
           ))}
         </div>
 

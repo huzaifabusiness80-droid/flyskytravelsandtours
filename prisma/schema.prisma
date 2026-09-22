@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String   @default("Admin")
+  role      String   @default("SUPER_ADMIN")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  shortDesc String
+  heroImage String
+  tagline   String
+  overview  String
+  benefits  String[]
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SubService {
+  id                   String   @id @default(cuid())
+  parentSlug           String
+  parentTitle          String
+  slug                 String   @unique
+  title                String
+  subtitle             String
+  badge                String
+  image                String
+  priceOrFee           String
+  durationOrProcessing String
+  validity             String
+  overview             String
+  requirements         String[]
+  inclusions           String[]
+  stepsOrItinerary     Json     @default("[]")
+  faqs                 Json     @default("[]")
+  isFeatured           Boolean  @default(false)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model Package {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  category      String
+  duration      String
+  price         String
+  originalPrice String?
+  imageSrc      String
+  rating        Int      @default(5)
+  reviewsCount  Int      @default(20)
+  isSale        Boolean  @default(false)
+  link          String?
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Destination {
+  id             String   @id @default(cuid())
+  name           String
+  country        String
+  imageSrc       String
+  visaType       String
+  processingTime String
+  highlight      String
+  link           String
+  category       String   @default("all")
+  order          Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Inquiry {
+  id          String   @id @default(cuid())
+  fullName    String
+  phone       String
+  email       String?
+  serviceType String
+  destination String?
+  message     String
+  status      String   @default("NEW")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

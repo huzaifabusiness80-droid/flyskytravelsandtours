@@ -1,22 +1,37 @@
 "use client";
 
 import { useState } from "react";
-import { Send, Phone, MapPin, Mail, Award, CheckCircle } from "lucide-react";
+import { Send, Phone, MapPin, Mail, CheckCircle2 } from "lucide-react";
 
 export default function InquiryFormSection() {
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
-    serviceType: "Visa Consultancy",
+    serviceType: "Visa Consultancy & Processing",
     destination: "",
     message: "",
   });
 
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Build WhatsApp query string for direct inquiry submission
+    try {
+      fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          phone: formData.phone,
+          serviceType: formData.serviceType,
+          destination: formData.destination,
+          message: formData.message,
+        }),
+      }).catch((err) => console.error("Error saving inquiry:", err));
+    } catch (err) {
+      console.error("Error in inquiry submit:", err);
+    }
+
     const text = `Hello Fly Sky Travel %26 Tourism,%0A%0A*New Inquiry Details:*%0A- *Name:* ${encodeURIComponent(formData.fullName)}%0A- *Phone:* ${encodeURIComponent(formData.phone)}%0A- *Service Required:* ${encodeURIComponent(formData.serviceType)}%0A- *Destination:* ${encodeURIComponent(formData.destination)}%0A- *Message:* ${encodeURIComponent(formData.message)}`;
     
     window.open(`https://wa.me/923001871622?text=${text}`, "_blank");
@@ -24,192 +39,173 @@ export default function InquiryFormSection() {
   };
 
   return (
-    <section id="contact" className="py-20 bg-white border-t border-slate-200">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-8">
+    <section id="contact" className="py-16 sm:py-24 bg-white border-b border-slate-200">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#00a8e8]/10 text-[#00a8e8] font-bold text-xs uppercase tracking-wider rounded-md border border-[#00a8e8]/20">
-            <span>Quick Contact & Booking</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0b3663] tracking-tight">
-            Send Us Your Travel Inquiry
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
+            Contact &amp; Inquiry
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-            Fill out the form below or contact our team directly for instant quotes on visas, flights, and tour packages.
+          <p className="text-slate-500 text-sm sm:text-base mt-2.5 font-normal">
+            Visit our office in Vehari or send us your travel query for immediate assistance
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        {/* 2-Column Split Layout: Left Map, Right Form */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
           
-          {/* Left Column: Office Details & Direct Info */}
-          <div className="lg:col-span-5 bg-[#0b3663] text-white p-8 sm:p-10 rounded-2xl space-y-8 shadow-none border border-slate-800">
-            <div>
-              <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#00a8e8] bg-white/10 px-3 py-1 rounded-md mb-3">
-                <Award className="w-4 h-4 text-[#00a8e8]" />
-                <span>LIC # LHR 10981</span>
-              </div>
-              <h3 className="text-2xl font-bold text-white">
-                Fly Sky Travel & Tourism
-              </h3>
-              <p className="text-slate-300 text-xs sm:text-sm mt-2 leading-relaxed">
-                Contact our Vehari office or reach out via phone/WhatsApp for professional travel assistance.
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              {/* Phone Numbers */}
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-lg bg-[#e61c24] text-white flex items-center justify-center shrink-0 mt-0.5">
-                  <Phone className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300">Helpline Phone Numbers</h4>
-                  <div className="text-sm font-semibold text-white mt-1 space-y-0.5">
-                    <p><a href="tel:03001871622" className="hover:text-[#00a8e8] transition-colors">0300-1871622</a></p>
-                    <p><a href="tel:03088171622" className="hover:text-[#00a8e8] transition-colors">0308-8171622</a></p>
-                    <p><a href="tel:03704171622" className="hover:text-[#00a8e8] transition-colors">0370-4171622</a></p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Office Address */}
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-lg bg-[#00a8e8] text-white flex items-center justify-center shrink-0 mt-0.5">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300">Office Location</h4>
-                  <p className="text-sm font-semibold text-white mt-1 leading-normal">
-                    Office No 1, F-Block, Freed Joyland Road, Vehari, Punjab, Pakistan
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Direct WhatsApp Badge */}
-            <div className="pt-4 border-t border-white/10">
-              <a
-                href="https://wa.me/923001871622"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-3 px-4 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-colors flex items-center justify-center gap-2 border-none outline-none shadow-none"
-              >
-                <span>Instant WhatsApp Inquiry</span>
-              </a>
-            </div>
+          {/* Left Column: Clean Full-Height Interactive Map (No text, No overlays, No rounded, No shadows) */}
+          <div className="w-full h-full min-h-[420px] lg:min-h-[520px] border border-slate-300 rounded-none overflow-hidden bg-slate-100">
+            <iframe
+              title="Fly Sky Travel & Tourism Location"
+              src="https://maps.google.com/maps?q=30.0436,72.3533+(Fly+Sky+Travel+%26+Tourism,+Vehari)&t=&z=15&ie=UTF8&iwloc=B&output=embed"
+              width="100%"
+              height="100%"
+              style={{ border: 0, minHeight: "100%", width: "100%", display: "block" }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
           </div>
 
-          {/* Right Column: Flat Inquiry Form (NO SHADOW) */}
-          <div className="lg:col-span-7 bg-slate-50 p-8 sm:p-10 rounded-2xl border border-slate-200 shadow-none">
-            {submitted ? (
-              <div className="text-center py-12 space-y-4">
-                <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
-                  <CheckCircle className="w-8 h-8" />
-                </div>
-                <h3 className="text-2xl font-bold text-[#0b3663]">Inquiry Redirected!</h3>
-                <p className="text-slate-600 text-sm max-w-md mx-auto">
-                  Your details have been passed to our WhatsApp inquiry desk. Our specialist will respond shortly.
+          {/* Right Column: Clean Sharp Corporate Form (No rounded, No shadows) */}
+          <div className="bg-slate-50 border border-slate-300 p-6 sm:p-8 lg:p-10 rounded-none flex flex-col justify-between">
+            <div>
+              {/* Form Heading */}
+              <div className="mb-6">
+                <h3 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                  Send Your Travel Requirements
+                </h3>
+                <p className="text-slate-500 text-xs sm:text-sm mt-1">
+                  Fill out the form below and our certified consultant will respond immediately on WhatsApp.
                 </p>
-                <button
-                  onClick={() => setSubmitted(false)}
-                  className="px-6 py-2.5 bg-[#0b3663] text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-none border-none"
-                >
-                  Submit Another Inquiry
-                </button>
               </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* Full Name */}
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-[#0b3663] uppercase tracking-wider">
-                      Your Full Name *
+
+              {submitted ? (
+                <div className="py-12 text-center space-y-4">
+                  <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-none flex items-center justify-center mx-auto">
+                    <CheckCircle2 className="w-6 h-6" />
+                  </div>
+                  <h4 className="text-xl font-bold text-slate-900">Inquiry Sent Successfully!</h4>
+                  <p className="text-slate-500 text-xs sm:text-sm max-w-sm mx-auto">
+                    Your details have been forwarded to our WhatsApp desk. We will reach back to you shortly.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setSubmitted(false)}
+                    className="px-6 py-2.5 bg-[#0b3663] text-white font-bold text-xs uppercase tracking-wider rounded-none transition-colors hover:bg-[#072545]"
+                  >
+                    Send Another Inquiry
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Full Name */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                        Full Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Muhammad Ali"
+                        value={formData.fullName}
+                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-none text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#00a8e8] focus:outline-none transition-colors"
+                      />
+                    </div>
+
+                    {/* Phone Number */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                        Phone / WhatsApp *
+                      </label>
+                      <input
+                        type="tel"
+                        required
+                        placeholder="0300-1234567"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-none text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#00a8e8] focus:outline-none transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Service Type */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                        Service Required *
+                      </label>
+                      <select
+                        value={formData.serviceType}
+                        onChange={(e) => setFormData({ ...formData, serviceType: e.target.value })}
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-none text-sm text-slate-900 focus:border-[#00a8e8] focus:outline-none transition-colors cursor-pointer"
+                      >
+                        <option value="Visa Consultancy & Processing">Visa Processing &amp; Consultancy</option>
+                        <option value="Flight Booking & Ticketing">Airline Tickets &amp; Flights</option>
+                        <option value="International Tour Packages">International Tour Packages</option>
+                        <option value="Umrah & Hajj Services">Umrah &amp; Hajj Packages</option>
+                        <option value="Hotel Booking">Hotel Accommodations</option>
+                        <option value="Travel Insurance">Travel Insurance</option>
+                      </select>
+                    </div>
+
+                    {/* Target Destination */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                        Target Country / City
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. UAE, UK, Turkey, Baku"
+                        value={formData.destination}
+                        onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-none text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#00a8e8] focus:outline-none transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Message */}
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                      Additional Details / Requirements
                     </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Muhammad Ali"
-                      value={formData.fullName}
-                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 focus:border-[#00a8e8] focus:outline-none shadow-none"
+                    <textarea
+                      rows={3}
+                      placeholder="Please mention your travel dates, number of persons, or specific inquiry..."
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-none text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#00a8e8] focus:outline-none transition-colors resize-none"
                     />
                   </div>
 
-                  {/* Phone / WhatsApp */}
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-[#0b3663] uppercase tracking-wider">
-                      Phone / WhatsApp Number *
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="0300-1234567"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 focus:border-[#00a8e8] focus:outline-none shadow-none"
-                    />
-                  </div>
-                </div>
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    className="w-full py-3.5 px-6 bg-[#e61c24] hover:bg-[#cc141b] text-white font-bold text-xs uppercase tracking-wider rounded-none transition-colors flex items-center justify-center gap-2 border-none outline-none cursor-pointer"
+                  >
+                    <Send className="w-4 h-4" />
+                    <span>Submit Inquiry Via WhatsApp</span>
+                  </button>
+                </form>
+              )}
+            </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* Service Required */}
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-[#0b3663] uppercase tracking-wider">
-                      Select Service *
-                    </label>
-                    <select
-                      value={formData.serviceType}
-                      onChange={(e) => setFormData({ ...formData, serviceType: e.target.value })}
-                      className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 focus:border-[#00a8e8] focus:outline-none shadow-none"
-                    >
-                      <option value="Visa Consultancy">Visa Consultancy & Processing</option>
-                      <option value="Flight Booking">Flight Booking & Ticketing</option>
-                      <option value="Tour Packages">Worldwide Tour Packages</option>
-                      <option value="Umrah Packages">Umrah & Hajj Services</option>
-                      <option value="Hotel Booking">Hotel Reservations</option>
-                    </select>
-                  </div>
+            {/* Quick Contact Footer Bar inside Form Box */}
+            <div className="mt-8 pt-5 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-600">
+              <div className="flex items-center gap-2">
+                <Phone className="w-3.5 h-3.5 text-[#00a8e8] shrink-0" />
+                <span>0300-1871622 | 0308-8171622</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 text-[#e61c24] shrink-0" />
+                <span className="truncate">Office #1, F-Block, Vehari</span>
+              </div>
+            </div>
 
-                  {/* Destination */}
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-[#0b3663] uppercase tracking-wider">
-                      Target Country / Destination
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. UK, Turkey, Dubai, Makkah"
-                      value={formData.destination}
-                      onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
-                      className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 focus:border-[#00a8e8] focus:outline-none shadow-none"
-                    />
-                  </div>
-                </div>
-
-                {/* Message */}
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-[#0b3663] uppercase tracking-wider">
-                    Additional Details / Inquiry Notes
-                  </label>
-                  <textarea
-                    rows={4}
-                    placeholder="Tell us about travel dates, number of passengers, or specific visa query..."
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 focus:border-[#00a8e8] focus:outline-none shadow-none resize-none"
-                  />
-                </div>
-
-                {/* Submit Button (Strict NO SHADOW) */}
-                <button
-                  type="submit"
-                  className="w-full py-4 px-6 bg-[#e61c24] hover:bg-[#cc141b] text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-colors flex items-center justify-center gap-2 border-none outline-none shadow-none"
-                >
-                  <Send className="w-4 h-4" />
-                  <span>Submit Inquiry Now</span>
-                </button>
-              </form>
-            )}
           </div>
 
         </div>
