@@ -20,9 +20,15 @@ interface Destination {
   name: string;
   country: string;
   image: string;
+  imageSrc?: string;
+  visaType?: string;
+  processingTime?: string;
+  highlight?: string;
+  link?: string;
+  category?: string;
   description?: string;
-  packagesCount: number;
-  featured: boolean;
+  packagesCount?: number;
+  featured?: boolean;
 }
 
 export default function AdminDestinationsPage() {
@@ -58,6 +64,10 @@ export default function AdminDestinationsPage() {
       name: "",
       country: "",
       image: "/destinations/azerbaijan.jpg",
+      visaType: "Tourist & Visit Visa",
+      processingTime: "3 - 5 Working Days",
+      highlight: "Explore unforgettable sights, rich culture and breathtaking experiences.",
+      link: "/services/visa-processing",
       description: "Explore unforgettable sights, rich culture and breathtaking experiences.",
       packagesCount: 4,
       featured: true,
@@ -67,7 +77,21 @@ export default function AdminDestinationsPage() {
   };
 
   const openEditModal = (dest: Destination) => {
-    setEditingDest(dest);
+    const raw: any = dest;
+    const mapped: Partial<Destination> = {
+      ...dest,
+      name: raw.name || "",
+      country: raw.country || "",
+      image: raw.image || raw.imageSrc || "/destinations/azerbaijan.jpg",
+      visaType: raw.visaType || "Tourist & Visit Visa",
+      processingTime: raw.processingTime || "3 - 5 Working Days",
+      highlight: raw.highlight || raw.description || `${raw.name} travel and tour highlights`,
+      link: raw.link || "/services/visa-processing",
+      description: raw.description || raw.highlight || "Explore unforgettable sights, rich culture and breathtaking experiences.",
+      packagesCount: raw.packagesCount ?? 4,
+      featured: raw.featured ?? true,
+    };
+    setEditingDest(mapped);
     setError(null);
     setIsModalOpen(true);
   };
@@ -82,12 +106,18 @@ export default function AdminDestinationsPage() {
     setSaving(true);
     setError(null);
 
+    const payload = {
+      ...editingDest,
+      imageSrc: editingDest.image,
+      highlight: editingDest.highlight || editingDest.description || `${editingDest.name} tours`,
+    };
+
     try {
       const method = editingDest.id ? "PUT" : "POST";
       const res = await fetch("/api/admin/destinations", {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editingDest),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -335,9 +365,73 @@ export default function AdminDestinationsPage() {
                   />
                 </div>
 
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      Visa Type / Category Subtitle
+                    </label>
+                    <input
+                      type="text"
+                      value={editingDest.visaType || ""}
+                      onChange={(e) =>
+                        setEditingDest({ ...editingDest, visaType: e.target.value })
+                      }
+                      className="w-full text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663]"
+                      placeholder="e.g. 5 Year Multiple & Tourist"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      Processing Time
+                    </label>
+                    <input
+                      type="text"
+                      value={editingDest.processingTime || ""}
+                      onChange={(e) =>
+                        setEditingDest({ ...editingDest, processingTime: e.target.value })
+                      }
+                      className="w-full text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663]"
+                      placeholder="e.g. 24-48 Hours / 3-5 Working Days"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      Highlight Tag / Key Feature
+                    </label>
+                    <input
+                      type="text"
+                      value={editingDest.highlight || ""}
+                      onChange={(e) =>
+                        setEditingDest({ ...editingDest, highlight: e.target.value })
+                      }
+                      className="w-full text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663]"
+                      placeholder="e.g. Done Base Tourist Visa"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      Target Page Link (URL)
+                    </label>
+                    <input
+                      type="text"
+                      value={editingDest.link || ""}
+                      onChange={(e) =>
+                        setEditingDest({ ...editingDest, link: e.target.value })
+                      }
+                      className="w-full text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663] font-mono"
+                      placeholder="e.g. /services/visa-processing/uae-visa"
+                    />
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                    Short Description
+                    Short Description / Overview
                   </label>
                   <textarea
                     rows={2}

@@ -23,6 +23,7 @@ interface ServiceItem {
   tagline?: string;
   description?: string;
   image: string;
+  benefits?: string[];
   iconName?: string;
   order: number;
   featured: boolean;
@@ -33,6 +34,7 @@ export default function AdminServicesPage() {
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingItem, setEditingItem] = useState<Partial<ServiceItem> | null>(null);
+  const [benefitsStr, setBenefitsStr] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -63,16 +65,37 @@ export default function AdminServicesPage() {
       tagline: "Premier Travel Solution",
       description: "Complete professional assistance tailored to your travel requirements.",
       image: "/destinations/azerbaijan.jpg",
+      benefits: [
+        "Govt. Licensed Consultancy",
+        "Transparent Processing & Fast Approvals",
+        "Dedicated Travel Desk Support"
+      ],
       iconName: "Globe",
       order: services.length + 1,
       featured: true,
     });
+    setBenefitsStr("Govt. Licensed Consultancy\nTransparent Processing & Fast Approvals\nDedicated Travel Desk Support");
     setError(null);
     setIsModalOpen(true);
   };
 
   const openEditModal = (s: ServiceItem) => {
-    setEditingItem(s);
+    const raw: any = s;
+    const mapped: Partial<ServiceItem> = {
+      ...s,
+      name: raw.name || raw.title || "",
+      slug: raw.slug || "",
+      tagline: raw.tagline || "Premier Travel Solution",
+      description: raw.description || raw.shortDesc || raw.overview || "",
+      image: raw.image || raw.heroImage || "/destinations/azerbaijan.jpg",
+      benefits: Array.isArray(raw.benefits) ? raw.benefits : [],
+    };
+    setEditingItem(mapped);
+    setBenefitsStr(
+      mapped.benefits && mapped.benefits.length > 0
+        ? mapped.benefits.join("\n")
+        : "Govt. Licensed Consultancy\nTransparent Processing & Fast Approvals\nDedicated Travel Desk Support"
+    );
     setError(null);
     setIsModalOpen(true);
   };
@@ -87,12 +110,17 @@ export default function AdminServicesPage() {
     setSaving(true);
     setError(null);
 
+    const payload = {
+      ...editingItem,
+      benefits: benefitsStr.split("\n").map((b) => b.trim()).filter(Boolean),
+    };
+
     try {
       const method = editingItem.id ? "PUT" : "POST";
       const res = await fetch("/api/admin/services", {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editingItem),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -283,7 +311,7 @@ export default function AdminServicesPage() {
 
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                    Description
+                    Description & Overview
                   </label>
                   <textarea
                     rows={3}
@@ -292,6 +320,20 @@ export default function AdminServicesPage() {
                       setEditingItem({ ...editingItem, description: e.target.value })
                     }
                     className="w-full text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663]"
+                    placeholder="Short description displayed on services cards..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    Key Features / Benefits (1 per line)
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={benefitsStr}
+                    onChange={(e) => setBenefitsStr(e.target.value)}
+                    className="w-full text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663]"
+                    placeholder="Govt. Licensed Consultancy&#10;Embassy Appointment Schedule&#10;Verifiable Hotel & Ticket Vouchers"
                   />
                 </div>
 

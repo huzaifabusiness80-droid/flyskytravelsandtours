@@ -22,11 +22,15 @@ interface TourPackage {
   title: string;
   slug: string;
   destination: string;
+  category?: string;
   duration: string;
   price: string;
+  originalPrice?: string;
   rating?: number;
   reviewsCount?: number;
   badge?: string;
+  isSale?: boolean;
+  link?: string;
   image: string;
   overview?: string;
   included: string[];
@@ -39,13 +43,17 @@ interface TourPackage {
 const emptyPackage: Partial<TourPackage> = {
   title: "",
   slug: "",
-  destination: "",
+  destination: "Dubai, UAE",
+  category: "City Tours, Desert Safari, Burj Khalifa",
   duration: "5 Days / 4 Nights",
   price: "PKR 145,000",
-  rating: 4.9,
-  reviewsCount: 30,
+  originalPrice: "PKR 165,000",
+  rating: 5,
+  reviewsCount: 28,
   badge: "Featured",
-  image: "/destinations/azerbaijan.jpg",
+  isSale: true,
+  link: "/services/tour-packages/dubai-tour",
+  image: "/destinations/dubai.jpg",
   overview: "",
   included: ["Hotel Accommodation", "Daily Breakfast", "Airport Transfers", "City Tours"],
   excluded: ["International Airfare", "Personal Expenses", "Travel Insurance"],
@@ -91,7 +99,26 @@ export default function AdminPackagesPage() {
   }, []);
 
   const openNewModal = () => {
-    const fresh = { ...emptyPackage };
+    const fresh: Partial<TourPackage> = {
+      title: "",
+      slug: "",
+      destination: "Dubai, UAE",
+      category: "City Tours, Desert Safari, Burj Khalifa",
+      duration: "5 Days / 4 Nights",
+      price: "PKR 145,000",
+      originalPrice: "PKR 165,000",
+      rating: 5,
+      reviewsCount: 28,
+      badge: "Best Seller",
+      isSale: true,
+      featured: true,
+      link: "/services/tour-packages/dubai-tour",
+      image: "/destinations/dubai.jpg",
+      overview: "Comprehensive international tour package with verified luxury hotels and guided excursions.",
+      included: ["Hotel Accommodation (4-Star)", "Daily Buffet Breakfast", "Return Airport Transfers", "Desert Safari & City Tour"],
+      excluded: ["International Flight Ticket", "Personal Expenses", "Travel Insurance"],
+      highlights: ["Burj Khalifa View", "Desert Dune Bashing", "Marina Dhow Cruise Dinner"],
+    };
     setEditingPkg(fresh);
     setIncludedStr(fresh.included?.join("\n") || "");
     setExcludedStr(fresh.excluded?.join("\n") || "");
@@ -101,10 +128,51 @@ export default function AdminPackagesPage() {
   };
 
   const openEditModal = (pkg: TourPackage) => {
-    setEditingPkg(pkg);
-    setIncludedStr(pkg.included?.join("\n") || "");
-    setExcludedStr(pkg.excluded?.join("\n") || "");
-    setHighlightsStr(pkg.highlights?.join("\n") || "");
+    const currentCategory = pkg.category || pkg.destination || "Guided Tour";
+    const mappedPkg: Partial<TourPackage> = {
+      ...pkg,
+      title: pkg.title || "",
+      slug: pkg.slug || "",
+      destination: pkg.destination || pkg.category || "International",
+      category: currentCategory,
+      duration: pkg.duration || "5 Days / 4 Nights",
+      price: pkg.price || "PKR 145,000",
+      originalPrice: pkg.originalPrice || "",
+      rating: pkg.rating || 5,
+      reviewsCount: pkg.reviewsCount || 25,
+      badge: pkg.badge || (pkg.isSale ? "Special Offer" : "Featured"),
+      isSale: pkg.isSale !== undefined ? pkg.isSale : (pkg.featured ?? true),
+      featured: pkg.featured !== undefined ? pkg.featured : (pkg.isSale ?? true),
+      link: pkg.link || `/services/tour-packages/${pkg.slug}`,
+      image: pkg.image || (pkg as any).imageSrc || "/destinations/dubai.jpg",
+      overview: pkg.overview || (pkg as any).description || `${pkg.title} - Complete guided holiday package with accommodation and transfers.`,
+    };
+
+    setEditingPkg(mappedPkg);
+
+    // Populate Included items with fallback
+    setIncludedStr(
+      Array.isArray(pkg.included) && pkg.included.length > 0
+        ? pkg.included.join("\n")
+        : "Hotel Accommodation (4-Star)\nDaily Buffet Breakfast\nReturn Airport Transfers\nGuided City Sightseeing"
+    );
+
+    // Populate Excluded items with fallback
+    setExcludedStr(
+      Array.isArray(pkg.excluded) && pkg.excluded.length > 0
+        ? pkg.excluded.join("\n")
+        : "International Airline Tickets\nPersonal Expenses & Shopping\nTravel Insurance"
+    );
+
+    // Populate Highlights with fallback
+    setHighlightsStr(
+      Array.isArray(pkg.highlights) && pkg.highlights.length > 0
+        ? pkg.highlights.join("\n")
+        : currentCategory.includes(",")
+        ? currentCategory.split(",").map((s) => s.trim()).filter(Boolean).join("\n")
+        : "Scenic Landmarks & Tours\nPrivate Luxury Transport\n24/7 Dedicated Support"
+    );
+
     setError(null);
     setIsModalOpen(true);
   };
@@ -116,11 +184,12 @@ export default function AdminPackagesPage() {
       return;
     }
 
-    setSaving(true);
-    setError(null);
-
     const payload = {
       ...editingPkg,
+      category: editingPkg.category || editingPkg.destination,
+      originalPrice: editingPkg.originalPrice || null,
+      link: editingPkg.link || `/services/tour-packages/${editingPkg.slug}`,
+      isSale: editingPkg.isSale !== undefined ? editingPkg.isSale : (editingPkg.featured ?? false),
       included: includedStr.split("\n").map((s) => s.trim()).filter(Boolean),
       excluded: excludedStr.split("\n").map((s) => s.trim()).filter(Boolean),
       highlights: highlightsStr.split("\n").map((s) => s.trim()).filter(Boolean),
@@ -427,21 +496,16 @@ export default function AdminPackagesPage() {
 
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                      Rating (1-5)
+                      Original Price (Discount Strikethrough)
                     </label>
                     <input
-                      type="number"
-                      step="0.1"
-                      min="1"
-                      max="5"
-                      value={editingPkg.rating || 4.9}
+                      type="text"
+                      value={editingPkg.originalPrice || ""}
                       onChange={(e) =>
-                        setEditingPkg({
-                          ...editingPkg,
-                          rating: parseFloat(e.target.value) || 5,
-                        })
+                        setEditingPkg({ ...editingPkg, originalPrice: e.target.value })
                       }
                       className="w-full text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663]"
+                      placeholder="e.g. PKR 165,000"
                     />
                   </div>
 
@@ -459,6 +523,38 @@ export default function AdminPackagesPage() {
                         Show on Homepage
                       </span>
                     </label>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      Category / Tour Features Subtitle
+                    </label>
+                    <input
+                      type="text"
+                      value={editingPkg.category || ""}
+                      onChange={(e) =>
+                        setEditingPkg({ ...editingPkg, category: e.target.value })
+                      }
+                      className="w-full text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663]"
+                      placeholder="e.g. City Tours, Desert Safari, Burj Khalifa"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      Target Link / Detail Page URL
+                    </label>
+                    <input
+                      type="text"
+                      value={editingPkg.link || ""}
+                      onChange={(e) =>
+                        setEditingPkg({ ...editingPkg, link: e.target.value })
+                      }
+                      className="w-full text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663] font-mono"
+                      placeholder="e.g. /services/tour-packages/dubai-tour"
+                    />
                   </div>
                 </div>
 

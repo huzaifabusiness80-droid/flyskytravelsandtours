@@ -22,6 +22,16 @@ interface ServiceItem {
   slug: string;
 }
 
+interface StepItem {
+  title: string;
+  description: string;
+}
+
+interface FaqItem {
+  question: string;
+  answer: string;
+}
+
 interface SubService {
   id: string;
   serviceId: string;
@@ -43,6 +53,8 @@ interface SubService {
   excludes: string[];
   badge?: string;
   featured: boolean;
+  stepsOrItinerary?: StepItem[];
+  faqs?: FaqItem[];
 }
 
 export default function AdminSubServicesPage() {
@@ -58,6 +70,8 @@ export default function AdminSubServicesPage() {
 
   const [reqsStr, setReqsStr] = useState("");
   const [includesStr, setIncludesStr] = useState("");
+  const [steps, setSteps] = useState<StepItem[]>([]);
+  const [faqs, setFaqs] = useState<FaqItem[]>([]);
 
   const loadData = async () => {
     try {
@@ -122,16 +136,101 @@ export default function AdminSubServicesPage() {
     setEditingItem(fresh);
     setReqsStr(fresh.requirements?.join("\n") || "");
     setIncludesStr(fresh.includes?.join("\n") || "");
+    setSteps([
+      { title: "Step 1: Document Auditing", description: "Audit documents and verify embassy requirements." },
+      { title: "Step 2: Form & Vouchers", description: "Draft travel itinerary and issue verifiable vouchers." },
+      { title: "Step 3: Submission & Tracking", description: "Submit application file and track real-time status." }
+    ]);
+    setFaqs([
+      { question: "What is the processing time?", answer: "Normal processing takes 3 to 7 working days depending on embassy workload." }
+    ]);
     setError(null);
     setIsModalOpen(true);
   };
 
   const openEditModal = (item: SubService) => {
-    setEditingItem(item);
-    setReqsStr(item.requirements?.join("\n") || "");
-    setIncludesStr(item.includes?.join("\n") || "");
+    const raw: any = item;
+    const cleanPrice = (raw.priceStarting || raw.priceOrFee || "").replace(/^PKR\s*/i, "").replace(/[^0-9]/g, "") || (raw.priceStarting || raw.priceOrFee || "25000");
+
+    const mappedItem: Partial<SubService> = {
+      ...item,
+      id: raw.id,
+      serviceId: raw.serviceId || raw.parentSlug || (services.length > 0 ? services[0].id : ""),
+      name: raw.name || raw.title || "",
+      slug: raw.slug || "",
+      country: raw.country || raw.title || "",
+      tagline: raw.tagline || raw.subtitle || "Fast-Track Travel & Visa Services",
+      description: raw.description || raw.overview || "",
+      image: raw.image || "/destinations/azerbaijan.jpg",
+      priceStarting: cleanPrice,
+      currency: "PKR",
+      processingTime: raw.processingTime || raw.durationOrProcessing || "3 - 5 Working Days",
+      validity: raw.validity || "30 Days / 90 Days",
+      stayDuration: raw.stayDuration || "30 Days",
+      entryType: raw.entryType || "Single / Multiple",
+      badge: raw.badge || "Featured",
+      featured: raw.featured !== undefined ? !!raw.featured : (raw.isFeatured !== undefined ? !!raw.isFeatured : true),
+      requirements: Array.isArray(raw.requirements) ? raw.requirements : [],
+      includes: Array.isArray(raw.includes) ? raw.includes : Array.isArray(raw.inclusions) ? raw.inclusions : [],
+    };
+
+    setEditingItem(mappedItem);
+    setReqsStr(
+      mappedItem.requirements && mappedItem.requirements.length > 0
+        ? mappedItem.requirements.join("\n")
+        : "Original Passport valid for at least 6 months\nRecent 2 passport size photos with white background\nValid CNIC copy / National Identity Card\nConfirmed return flight reservation & hotel booking"
+    );
+    setIncludesStr(
+      mappedItem.includes && mappedItem.includes.length > 0
+        ? mappedItem.includes.join("\n")
+        : "Official Visa Fee & Application Filing\nComplete Document Verification\nEmbassy Appointment Support\nHotel & Flight Itinerary Vouchers"
+    );
+    setSteps(
+      Array.isArray(raw.stepsOrItinerary) && raw.stepsOrItinerary.length > 0
+        ? raw.stepsOrItinerary
+        : [
+            { title: "Step 1: Document Auditing", description: "Audit documents and verify embassy requirements." },
+            { title: "Step 2: Form & Vouchers", description: "Draft travel itinerary and issue verifiable vouchers." },
+            { title: "Step 3: Submission & Tracking", description: "Submit application file and track real-time status." }
+          ]
+    );
+    setFaqs(
+      Array.isArray(raw.faqs) && raw.faqs.length > 0
+        ? raw.faqs
+        : [
+            { question: "What is the standard processing time?", answer: "Normal processing takes 3 to 7 working days depending on embassy verification." }
+          ]
+    );
     setError(null);
     setIsModalOpen(true);
+  };
+
+  const addStep = () => {
+    setSteps([...steps, { title: `Step ${steps.length + 1}: `, description: "" }]);
+  };
+
+  const removeStep = (index: number) => {
+    setSteps(steps.filter((_, i) => i !== index));
+  };
+
+  const updateStep = (index: number, field: keyof StepItem, value: string) => {
+    const updated = [...steps];
+    updated[index] = { ...updated[index], [field]: value };
+    setSteps(updated);
+  };
+
+  const addFaq = () => {
+    setFaqs([...faqs, { question: "", answer: "" }]);
+  };
+
+  const removeFaq = (index: number) => {
+    setFaqs(faqs.filter((_, i) => i !== index));
+  };
+
+  const updateFaq = (index: number, field: keyof FaqItem, value: string) => {
+    const updated = [...faqs];
+    updated[index] = { ...updated[index], [field]: value };
+    setFaqs(updated);
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -148,6 +247,8 @@ export default function AdminSubServicesPage() {
       ...editingItem,
       requirements: reqsStr.split("\n").map((s) => s.trim()).filter(Boolean),
       includes: includesStr.split("\n").map((s) => s.trim()).filter(Boolean),
+      stepsOrItinerary: steps.filter((s) => s.title.trim() || s.description.trim()),
+      faqs: faqs.filter((f) => f.question.trim() || f.answer.trim()),
     };
 
     try {
@@ -561,6 +662,130 @@ export default function AdminSubServicesPage() {
                       placeholder="Official Visa Fee&#10;Document Verification&#10;Embassy Appointment Schedule&#10;Flight & Hotel Reservation for Visa"
                     />
                   </div>
+                </div>
+
+                {/* Step-by-Step Procedure & Roadmap */}
+                <div className="border-t border-slate-200 pt-5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800">
+                        Step-by-Step Procedure & Roadmap / Itinerary
+                      </h4>
+                      <p className="text-[11px] text-slate-500">
+                        These steps appear in the &quot;Step-by-Step Procedure &amp; Roadmap&quot; section on the detail page.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={addStep}
+                      className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider flex items-center gap-1 border border-slate-300 transition-colors"
+                    >
+                      <Plus className="w-3.5 h-3.5 text-[#00a8e8]" />
+                      <span>Add Step</span>
+                    </button>
+                  </div>
+
+                  {steps.length === 0 ? (
+                    <div className="p-3 bg-slate-50 border border-dashed border-slate-300 text-slate-500 text-xs text-center">
+                      No custom steps added yet. Click &quot;Add Step&quot; to define procedure steps.
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {steps.map((step, idx) => (
+                        <div key={idx} className="p-3 bg-slate-50 border border-slate-300 relative space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold uppercase tracking-wider text-[#00a8e8]">
+                              Step #{idx + 1}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => removeStep(idx)}
+                              className="text-red-600 hover:text-red-800 p-1 transition-colors"
+                              title="Delete Step"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            placeholder="Step Title (e.g. Step 1: Document Auditing)"
+                            value={step.title}
+                            onChange={(e) => updateStep(idx, "title", e.target.value)}
+                            className="w-full text-xs px-2.5 py-1.5 border border-slate-300 bg-white focus:outline-none focus:border-[#0b3663] font-semibold"
+                          />
+                          <textarea
+                            rows={2}
+                            placeholder="Step Description / details..."
+                            value={step.description}
+                            onChange={(e) => updateStep(idx, "description", e.target.value)}
+                            className="w-full text-xs px-2.5 py-1.5 border border-slate-300 bg-white focus:outline-none focus:border-[#0b3663]"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Frequently Asked Questions (FAQs) */}
+                <div className="border-t border-slate-200 pt-5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800">
+                        Frequently Asked Questions (FAQs)
+                      </h4>
+                      <p className="text-[11px] text-slate-500">
+                        Add common questions and answers for this specific service / package.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={addFaq}
+                      className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider flex items-center gap-1 border border-slate-300 transition-colors"
+                    >
+                      <Plus className="w-3.5 h-3.5 text-[#00a8e8]" />
+                      <span>Add FAQ</span>
+                    </button>
+                  </div>
+
+                  {faqs.length === 0 ? (
+                    <div className="p-3 bg-slate-50 border border-dashed border-slate-300 text-slate-500 text-xs text-center">
+                      No FAQs added yet. Click &quot;Add FAQ&quot; to add question/answer pairs.
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {faqs.map((faq, idx) => (
+                        <div key={idx} className="p-3 bg-slate-50 border border-slate-300 relative space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                              FAQ #{idx + 1}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => removeFaq(idx)}
+                              className="text-red-600 hover:text-red-800 p-1 transition-colors"
+                              title="Delete FAQ"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            placeholder="Question (e.g. Can fresh passport holders apply?)"
+                            value={faq.question}
+                            onChange={(e) => updateFaq(idx, "question", e.target.value)}
+                            className="w-full text-xs px-2.5 py-1.5 border border-slate-300 bg-white focus:outline-none focus:border-[#0b3663] font-semibold"
+                          />
+                          <textarea
+                            rows={2}
+                            placeholder="Answer details..."
+                            value={faq.answer}
+                            onChange={(e) => updateFaq(idx, "answer", e.target.value)}
+                            className="w-full text-xs px-2.5 py-1.5 border border-slate-300 bg-white focus:outline-none focus:border-[#0b3663]"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Footer buttons */}
