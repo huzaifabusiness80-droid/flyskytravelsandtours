@@ -33,17 +33,9 @@ export default function Header() {
 
             <div className="flex items-center gap-1.5 text-[11px] sm:text-sm flex-wrap justify-center font-semibold">
               <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />
-              <span>Call:</span>
-              <a href="tel:03001871622" className="hover:underline transition-colors">
-                0300-1871622
-              </a>
-              <span className="text-sky-200">•</span>
-              <a href="tel:03088171622" className="hover:underline transition-colors">
-                0308-8171622
-              </a>
-              <span className="text-sky-200 hidden xs:inline">•</span>
-              <a href="tel:03704171622" className="hover:underline transition-colors hidden xs:inline">
-                0370-4171622
+              <span>Call / WhatsApp:</span>
+              <a href="tel:+923088171622" className="hover:underline transition-colors font-bold tracking-wide">
+                +92 308 8171622
               </a>
             </div>
           </div>
@@ -104,7 +96,7 @@ export default function Header() {
 
           {/* Book Now -> Direct WhatsApp Booking Chat */}
           <a
-            href="https://wa.me/923001871622?text=Assalam-o-Alaikum%20Fly%20Sky%20Travel!%20I%20want%20to%20book%20a%20flight%20ticket%20/%20visa%20/%20tour%20package."
+            href="https://wa.me/923088171622?text=Assalam-o-Alaikum%20Fly%20Sky%20Travel!%20I%20want%20to%20book%20a%20flight%20ticket%20/%20visa%20/%20tour%20package."
             target="_blank"
             rel="noopener noreferrer"
             className="px-4 py-2.5 bg-[#e61c24] hover:bg-[#cc141b] text-white font-semibold text-sm rounded-none transition-colors flex items-center gap-2 outline-none border-none shadow-none focus:ring-0"
@@ -151,7 +143,7 @@ export default function Header() {
               <span>Inquire Now</span>
             </Link>
             <a
-              href="https://wa.me/923001871622?text=Assalam-o-Alaikum%20Fly%20Sky%20Travel!%20I%20want%20to%20book%20a%20flight%20ticket%20/%20visa%20/%20tour%20package."
+              href="https://wa.me/923088171622?text=Assalam-o-Alaikum%20Fly%20Sky%20Travel!%20I%20want%20to%20book%20a%20flight%20ticket%20/%20visa%20/%20tour%20package."
               target="_blank"
               rel="noopener noreferrer"
               className="w-full px-5 py-2.5 bg-[#e61c24] hover:bg-[#cc141b] text-white font-semibold text-center rounded-none transition-colors flex items-center justify-center gap-2 border-none shadow-none"
