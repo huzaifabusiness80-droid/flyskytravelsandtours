@@ -34,7 +34,7 @@ export default function InquiryFormSection() {
 
     const text = `Hello Fly Sky Travel %26 Tourism,%0A%0A*New Inquiry Details:*%0A- *Name:* ${encodeURIComponent(formData.fullName)}%0A- *Phone:* ${encodeURIComponent(formData.phone)}%0A- *Service Required:* ${encodeURIComponent(formData.serviceType)}%0A- *Destination:* ${encodeURIComponent(formData.destination)}%0A- *Message:* ${encodeURIComponent(formData.message)}`;
     
-    window.open(`https://wa.me/923001871622?text=${text}`, "_blank");
+    window.open(`https://wa.me/923088171622?text=${text}`, "_blank");
     setSubmitted(true);
   };
 

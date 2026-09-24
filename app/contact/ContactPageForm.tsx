@@ -40,7 +40,7 @@ export default function ContactPageForm() {
     // 2. Open WhatsApp for immediate customer satisfaction
     const text = `Hello Fly Sky Travel %26 Tourism,%0A%0A*New Website Inquiry:*%0A- *Name:* ${encodeURIComponent(formData.fullName)}%0A- *Phone:* ${encodeURIComponent(formData.phone)}%0A- *Email:* ${encodeURIComponent(formData.email || "N/A")}%0A- *Service Required:* ${encodeURIComponent(formData.serviceType)}%0A- *Destination/City:* ${encodeURIComponent(formData.destination || "N/A")}%0A- *Message:* ${encodeURIComponent(formData.message)}`;
     
-    window.open(`https://wa.me/923001871622?text=${text}`, "_blank");
+    window.open(`https://wa.me/923088171622?text=${text}`, "_blank");
     setSubmitted(true);
   };
 

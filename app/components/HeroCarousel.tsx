@@ -30,7 +30,7 @@ const slides: BannerSlide[] = [
     primaryButtonText: "Explore Tour Packages",
     primaryButtonHref: "/services/tour-packages",
     secondaryButtonText: "Chat On WhatsApp",
-    secondaryButtonHref: "https://wa.me/923001871622",
+    secondaryButtonHref: "https://wa.me/923088171622?text=Assalam-o-Alaikum%20Fly%20Sky%20Travel!%20I%20want%20information%20about%20tours%20and%20flights.",
     isWhatsAppSecondary: true,
   },
   {
@@ -43,7 +43,7 @@ const slides: BannerSlide[] = [
     primaryButtonText: "Apply For Visa",
     primaryButtonHref: "/services/visa-processing",
     secondaryButtonText: "Call Helpline",
-    secondaryButtonHref: "tel:03001871622",
+    secondaryButtonHref: "tel:+923088171622",
     isWhatsAppSecondary: false,
   },
   {
@@ -56,7 +56,7 @@ const slides: BannerSlide[] = [
     primaryButtonText: "View Featured Packages",
     primaryButtonHref: "/#tours",
     secondaryButtonText: "Instant WhatsApp Quote",
-    secondaryButtonHref: "https://wa.me/923001871622",
+    secondaryButtonHref: "https://wa.me/923088171622?text=Assalam-o-Alaikum%20Fly%20Sky%20Travel!%20I%20want%20a%20quote%20for%20tour%20packages.",
     isWhatsAppSecondary: true,
   },
 ];
@@ -129,7 +129,6 @@ export default function HeroCarousel() {
                   alt={slide.title}
                   fill
                   priority={index === 0}
-                  quality={95}
                   className="object-cover w-full h-full object-center opacity-100"
                   sizes="100vw"
                 />

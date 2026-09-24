@@ -34,7 +34,7 @@ export default function ServiceInquiryForm({ defaultService }: Props) {
 
     const text = `Hello Fly Sky Travel %26 Tourism,%0A%0A*Service Inquiry:* ${encodeURIComponent(defaultService)}%0A- *Name:* ${encodeURIComponent(name)}%0A- *Phone:* ${encodeURIComponent(phone)}%0A- *Destination/City:* ${encodeURIComponent(city)}%0A- *Details:* ${encodeURIComponent(details)}`;
     
-    window.open(`https://wa.me/923001871622?text=${text}`, "_blank");
+    window.open(`https://wa.me/923088171622?text=${text}`, "_blank");
     setSubmitted(true);
   };
 
