@@ -3,10 +3,12 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Phone, MapPin, Award, Menu, X, Plane, MessageSquare } from "lucide-react";
 import FlightBookingModal from "./FlightBookingModal";
 
 export default function Header() {
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isFlightModalOpen, setIsFlightModalOpen] = useState(false);
   const [modalDefaults, setModalDefaults] = useState<{
@@ -23,6 +25,25 @@ export default function Header() {
     { name: "Flight Booking", href: "/services/air-ticketing" },
     { name: "Tour Packages", href: "/services/tour-packages" },
   ];
+
+  const isLinkActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/";
+    }
+    if (pathname === href) {
+      return true;
+    }
+    if (pathname.startsWith(`${href}/`)) {
+      const hasMoreSpecificMatch = navLinks.some(
+        (other) =>
+          other.href !== href &&
+          other.href.length > href.length &&
+          (pathname === other.href || pathname.startsWith(`${other.href}/`))
+      );
+      return !hasMoreSpecificMatch;
+    }
+    return false;
+  };
 
   // Listen for global flight booking trigger from anywhere in the app
   useEffect(() => {
@@ -91,19 +112,22 @@ export default function Header() {
 
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-8 xl:gap-10">
-            {navLinks.map((link, idx) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`text-[15px] font-semibold transition-colors py-1 ${
-                  idx === 0
-                    ? "text-[#e61c24] border-b-2 border-[#e61c24]"
-                    : "text-slate-800 hover:text-[#00a8e8]"
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const active = isLinkActive(link.href);
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`text-[15px] font-semibold transition-colors py-1 ${
+                    active
+                      ? "text-[#e61c24] border-b-2 border-[#e61c24]"
+                      : "text-slate-800 hover:text-[#00a8e8] border-b-2 border-transparent"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Header Action Buttons */}
@@ -147,17 +171,24 @@ export default function Header() {
 
         {/* Mobile Drawer Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-white border-t border-slate-200 px-4 pt-3 pb-6 space-y-3">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 text-base font-semibold text-slate-800 hover:bg-slate-50 hover:text-[#00a8e8] rounded-none"
-              >
-                {link.name}
-              </Link>
-            ))}
+          <div className="lg:hidden bg-white border-t border-slate-200 px-4 pt-3 pb-6 space-y-2">
+            {navLinks.map((link) => {
+              const active = isLinkActive(link.href);
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`block px-3 py-2 text-base font-semibold rounded-none transition-colors ${
+                    active
+                      ? "bg-red-50 text-[#e61c24] border-l-4 border-[#e61c24]"
+                      : "text-slate-800 hover:bg-slate-50 hover:text-[#00a8e8]"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
             <div className="pt-2 flex flex-col gap-2">
               <Link
                 href="/contact"
