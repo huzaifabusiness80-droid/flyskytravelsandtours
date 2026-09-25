@@ -306,11 +306,11 @@ export default function AdminSubServicesPage() {
   });
 
   return (
-    <AdminShell title="Visas & Sub-Services Management">
-      <div className="space-y-6">
+    <AdminShell title="Visas & Sub-Services">
+      <div className="space-y-4 sm:space-y-6">
         {/* Actions Bar */}
-        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 bg-white p-4 border border-slate-200">
-          <div className="flex flex-col sm:flex-row gap-3 flex-1">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 border border-slate-200 shadow-2xs">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 flex-1">
             <div className="relative flex-1">
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
@@ -323,11 +323,11 @@ export default function AdminSubServicesPage() {
             </div>
 
             <div className="flex items-center space-x-2">
-              <Filter className="w-4 h-4 text-slate-400" />
+              <Filter className="w-4 h-4 text-slate-400 flex-shrink-0" />
               <select
                 value={filterService}
                 onChange={(e) => setFilterService(e.target.value)}
-                className="text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663] bg-white font-semibold"
+                className="w-full sm:w-auto text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663] bg-white font-semibold"
               >
                 <option value="ALL">All Service Categories</option>
                 {services.map((s) => (
@@ -341,15 +341,15 @@ export default function AdminSubServicesPage() {
 
           <button
             onClick={openNewModal}
-            className="flex items-center justify-center space-x-1.5 bg-[#0b3663] hover:bg-[#00a8e8] text-white px-4 py-2.5 text-xs font-black uppercase tracking-wider transition-colors"
+            className="flex items-center justify-center space-x-1.5 bg-[#0b3663] hover:bg-[#00a8e8] text-white px-4 py-2.5 text-xs font-black uppercase tracking-wider transition-colors shadow-2xs"
           >
             <Plus className="w-4 h-4" />
-            <span>Add Visa / Sub-Service</span>
+            <span>Add Visa / Service</span>
           </button>
         </div>
 
         {/* Sub-services List */}
-        <div className="bg-white border border-slate-200">
+        <div className="bg-white border border-slate-200 shadow-2xs">
           {loading ? (
             <div className="p-12 text-center text-slate-400">
               <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2 text-[#00a8e8]" />
@@ -368,23 +368,23 @@ export default function AdminSubServicesPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs min-w-[700px]">
                 <thead className="bg-slate-100 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
                   <tr>
-                    <th className="py-3 px-4">Image</th>
-                    <th className="py-3 px-4">Name / Title</th>
-                    <th className="py-3 px-4">Parent Category</th>
-                    <th className="py-3 px-4">Processing & Stay</th>
-                    <th className="py-3 px-4">Starting Price</th>
-                    <th className="py-3 px-4">Requirements</th>
-                    <th className="py-3 px-4 text-right">Actions</th>
+                    <th className="py-3 px-3 sm:px-4">Image</th>
+                    <th className="py-3 px-3 sm:px-4">Name / Title</th>
+                    <th className="py-3 px-3 sm:px-4">Parent Category</th>
+                    <th className="py-3 px-3 sm:px-4">Processing & Stay</th>
+                    <th className="py-3 px-3 sm:px-4">Starting Price</th>
+                    <th className="py-3 px-3 sm:px-4">Requirements</th>
+                    <th className="py-3 px-3 sm:px-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {filtered.map((item) => (
                     <tr key={item.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="py-3 px-4">
-                        <div className="w-12 h-9 bg-slate-100 border border-slate-200 overflow-hidden relative">
+                      <td className="py-3 px-3 sm:px-4">
+                        <div className="w-12 h-9 sm:w-14 sm:h-10 bg-slate-100 border border-slate-200 overflow-hidden relative">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={item.image}
@@ -393,34 +393,34 @@ export default function AdminSubServicesPage() {
                           />
                         </div>
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-3 sm:px-4">
                         <div className="font-bold text-slate-900">{item.name}</div>
                         <div className="text-[10px] text-slate-400 font-mono">
                           slug: {item.slug}
                         </div>
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-3 sm:px-4">
                         <span className="px-2 py-0.5 bg-slate-100 border border-slate-200 font-bold text-[#0b3663] text-[10px] uppercase">
                           {item.service?.name || "General"}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-slate-600">
+                      <td className="py-3 px-3 sm:px-4 text-slate-600">
                         <div>Time: {item.processingTime || "N/A"}</div>
                         <div className="text-[10px] text-slate-400">
                           Stay: {item.stayDuration || item.validity || "Flexible"}
                         </div>
                       </td>
-                      <td className="py-3 px-4 font-bold text-[#0b3663]">
+                      <td className="py-3 px-3 sm:px-4 font-bold text-[#0b3663]">
                         {item.priceStarting
                           ? `${item.currency} ${item.priceStarting}`
                           : "Call for quote"}
                       </td>
-                      <td className="py-3 px-4 text-slate-600">
+                      <td className="py-3 px-3 sm:px-4 text-slate-600">
                         <span className="text-slate-500 font-semibold">
                           {item.requirements?.length || 0} items
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-right space-x-2">
+                      <td className="py-3 px-3 sm:px-4 text-right space-x-1.5">
                         <button
                           onClick={() => openEditModal(item)}
                           className="p-1.5 bg-slate-100 hover:bg-[#00a8e8] hover:text-white text-slate-700 transition-colors"
@@ -446,15 +446,15 @@ export default function AdminSubServicesPage() {
 
         {/* Edit / Create Modal */}
         {isModalOpen && editingItem && (
-          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-            <div className="bg-white border border-slate-300 w-full max-w-3xl my-8 p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-6 sticky top-0 bg-white z-10">
-                <h3 className="text-base font-black uppercase tracking-wider text-[#0b3663]">
+          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-start sm:items-center justify-center p-2 sm:p-4 overflow-y-auto">
+            <div className="bg-white border border-slate-300 w-full max-w-3xl my-2 sm:my-8 p-4 sm:p-6 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+              <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-200 mb-4 sm:mb-6 sticky top-0 bg-white z-10">
+                <h3 className="text-sm sm:text-base font-black uppercase tracking-wider text-[#0b3663]">
                   {editingItem.id ? "Edit Visa / Sub-Service" : "Create New Visa / Sub-Service"}
                 </h3>
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="p-1 text-slate-400 hover:text-slate-800 transition-colors"
+                  className="p-1.5 text-slate-400 hover:text-slate-800 transition-colors rounded"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -467,7 +467,7 @@ export default function AdminSubServicesPage() {
               )}
 
               <form onSubmit={handleSave} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                       Parent Service Category *
@@ -514,7 +514,7 @@ export default function AdminSubServicesPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                       URL Slug *
@@ -562,7 +562,7 @@ export default function AdminSubServicesPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                       Validity Period
@@ -636,13 +636,13 @@ export default function AdminSubServicesPage() {
                 </div>
 
                 {/* Requirements & Inclusions */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-200 pt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 border-t border-slate-200 pt-4">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                       Required Documents (1 item per line)
                     </label>
                     <textarea
-                      rows={5}
+                      rows={4}
                       value={reqsStr}
                       onChange={(e) => setReqsStr(e.target.value)}
                       className="w-full text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663]"
@@ -655,7 +655,7 @@ export default function AdminSubServicesPage() {
                       Included In Service (1 item per line)
                     </label>
                     <textarea
-                      rows={5}
+                      rows={4}
                       value={includesStr}
                       onChange={(e) => setIncludesStr(e.target.value)}
                       className="w-full text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663]"
@@ -665,20 +665,20 @@ export default function AdminSubServicesPage() {
                 </div>
 
                 {/* Step-by-Step Procedure & Roadmap */}
-                <div className="border-t border-slate-200 pt-5 space-y-3">
-                  <div className="flex items-center justify-between">
+                <div className="border-t border-slate-200 pt-4 sm:pt-5 space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
                       <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800">
                         Step-by-Step Procedure & Roadmap / Itinerary
                       </h4>
-                      <p className="text-[11px] text-slate-500">
-                        These steps appear in the &quot;Step-by-Step Procedure &amp; Roadmap&quot; section on the detail page.
+                      <p className="text-[10px] sm:text-[11px] text-slate-500">
+                        These steps appear in the procedure section on the detail page.
                       </p>
                     </div>
                     <button
                       type="button"
                       onClick={addStep}
-                      className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider flex items-center gap-1 border border-slate-300 transition-colors"
+                      className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1 border border-slate-300 transition-colors self-start sm:self-auto"
                     >
                       <Plus className="w-3.5 h-3.5 text-[#00a8e8]" />
                       <span>Add Step</span>
@@ -727,20 +727,20 @@ export default function AdminSubServicesPage() {
                 </div>
 
                 {/* Frequently Asked Questions (FAQs) */}
-                <div className="border-t border-slate-200 pt-5 space-y-3">
-                  <div className="flex items-center justify-between">
+                <div className="border-t border-slate-200 pt-4 sm:pt-5 space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
                       <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800">
                         Frequently Asked Questions (FAQs)
                       </h4>
-                      <p className="text-[11px] text-slate-500">
+                      <p className="text-[10px] sm:text-[11px] text-slate-500">
                         Add common questions and answers for this specific service / package.
                       </p>
                     </div>
                     <button
                       type="button"
                       onClick={addFaq}
-                      className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider flex items-center gap-1 border border-slate-300 transition-colors"
+                      className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1 border border-slate-300 transition-colors self-start sm:self-auto"
                     >
                       <Plus className="w-3.5 h-3.5 text-[#00a8e8]" />
                       <span>Add FAQ</span>
@@ -789,7 +789,7 @@ export default function AdminSubServicesPage() {
                 </div>
 
                 {/* Footer buttons */}
-                <div className="flex items-center justify-end space-x-3 pt-6 border-t border-slate-200">
+                <div className="flex items-center justify-end space-x-3 pt-4 sm:pt-6 border-t border-slate-200">
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
@@ -800,7 +800,7 @@ export default function AdminSubServicesPage() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="px-6 py-2 bg-[#0b3663] hover:bg-[#00a8e8] text-white text-xs font-black uppercase tracking-widest transition-colors flex items-center space-x-2 disabled:opacity-50"
+                    className="px-5 sm:px-6 py-2 bg-[#0b3663] hover:bg-[#00a8e8] text-white text-xs font-black uppercase tracking-widest transition-colors flex items-center space-x-2 disabled:opacity-50 shadow-2xs"
                   >
                     {saving ? (
                       <>

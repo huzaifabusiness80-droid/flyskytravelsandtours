@@ -119,16 +119,16 @@ export default function AdminInquiriesPage() {
   });
 
   return (
-    <AdminShell title="Inquiries & Customer Leads">
-      <div className="space-y-6">
+    <AdminShell title="Inquiries & Leads">
+      <div className="space-y-4 sm:space-y-6">
         {/* Filter bar */}
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-white p-4 border border-slate-200">
-          <div className="flex flex-1 gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 border border-slate-200 shadow-2xs">
+          <div className="flex flex-col sm:flex-row flex-1 gap-2 sm:gap-3">
             <div className="relative flex-1">
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Search leads by name, phone, email, service..."
+                placeholder="Search by name, phone, email, service..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 focus:outline-none focus:border-[#0b3663]"
@@ -136,11 +136,11 @@ export default function AdminInquiriesPage() {
             </div>
 
             <div className="flex items-center space-x-2">
-              <Filter className="w-4 h-4 text-slate-400" />
+              <Filter className="w-4 h-4 text-slate-400 flex-shrink-0" />
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663] bg-white font-semibold"
+                className="w-full sm:w-auto text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663] bg-white font-semibold"
               >
                 <option value="ALL">All Statuses</option>
                 <option value="NEW">New Inquiries</option>
@@ -161,14 +161,14 @@ export default function AdminInquiriesPage() {
         </div>
 
         {/* Inquiries Table & Details split view */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-white border border-slate-200 overflow-hidden">
-            <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="lg:col-span-2 bg-white border border-slate-200 overflow-hidden shadow-2xs">
+            <div className="p-3.5 sm:p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
               <h4 className="text-xs font-black uppercase tracking-wider text-slate-900">
                 Incoming Inquiries ({filtered.length})
               </h4>
               <span className="text-[10px] text-slate-500 font-semibold">
-                Click a lead to inspect details
+                Tap lead to inspect details
               </span>
             </div>
 
@@ -183,7 +183,7 @@ export default function AdminInquiriesPage() {
                 <p className="text-xs font-semibold">No leads found matching query</p>
               </div>
             ) : (
-              <div className="overflow-x-auto max-h-[650px] overflow-y-auto divide-y divide-slate-100">
+              <div className="divide-y divide-slate-100 max-h-[650px] overflow-y-auto">
                 {filtered.map((inq) => {
                   const isSelected = selectedInquiry?.id === inq.id;
                   const phoneClean = inq.phone ? inq.phone.replace(/[^0-9]/g, "") : "";
@@ -200,13 +200,21 @@ export default function AdminInquiriesPage() {
                   return (
                     <div
                       key={inq.id}
-                      onClick={() => setSelectedInquiry(inq)}
-                      className={`p-4 cursor-pointer transition-colors flex items-start justify-between gap-4 ${
-                        isSelected ? "bg-sky-50/70 border-l-4 border-[#00a8e8]" : "hover:bg-slate-50"
+                      onClick={() => {
+                        setSelectedInquiry(inq);
+                        // On mobile scroll to details panel
+                        if (window.innerWidth < 1024) {
+                          setTimeout(() => {
+                            document.getElementById("inquiry-details-panel")?.scrollIntoView({ behavior: "smooth" });
+                          }, 100);
+                        }
+                      }}
+                      className={`p-3.5 sm:p-4 cursor-pointer transition-colors flex items-start justify-between gap-3 ${
+                        isSelected ? "bg-sky-50/80 border-l-4 border-[#00a8e8]" : "hover:bg-slate-50"
                       }`}
                     >
-                      <div className="space-y-1 min-w-0">
-                        <div className="flex items-center space-x-2">
+                      <div className="space-y-1 min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                           <span className="font-black text-slate-900 text-xs">
                             {inq.name}
                           </span>
@@ -223,21 +231,21 @@ export default function AdminInquiriesPage() {
                           </span>
                         </div>
 
-                        <p className="text-xs font-semibold text-[#0b3663]">
+                        <p className="text-xs font-semibold text-[#0b3663] truncate">
                           {inq.service || inq.subject || "General Inquiry"}
                           {inq.destination && (
                             <span className="text-slate-500 font-normal">
                               {" "}
-                              • Dest: {inq.destination}
+                              • {inq.destination}
                             </span>
                           )}
                         </p>
 
-                        <p className="text-xs text-slate-600 line-clamp-2">
+                        <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
                           {inq.message}
                         </p>
 
-                        <div className="text-[10px] text-slate-400 flex items-center space-x-3 pt-1">
+                        <div className="text-[10px] text-slate-400 flex flex-wrap items-center gap-x-2 pt-1 font-mono">
                           <span>{inq.phone}</span>
                           <span>•</span>
                           <span>
@@ -258,10 +266,10 @@ export default function AdminInquiriesPage() {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold uppercase px-2 py-1 flex items-center space-x-1"
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold uppercase px-2 py-1 flex items-center space-x-1 shadow-2xs"
                           >
                             <PhoneCall className="w-3 h-3" />
-                            <span>WhatsApp</span>
+                            <span className="hidden sm:inline">WhatsApp</span>
                           </a>
                         )}
 
@@ -270,7 +278,7 @@ export default function AdminInquiriesPage() {
                             e.stopPropagation();
                             handleDelete(inq.id, inq.name);
                           }}
-                          className="p-1 text-slate-300 hover:text-red-600 transition-colors"
+                          className="p-1.5 text-slate-300 hover:text-red-600 transition-colors"
                           title="Delete Lead"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -284,16 +292,27 @@ export default function AdminInquiriesPage() {
           </div>
 
           {/* Details Panel */}
-          <div className="bg-white border border-slate-200 p-5 h-fit sticky top-24">
+          <div
+            id="inquiry-details-panel"
+            className="bg-white border border-slate-200 p-4 sm:p-5 h-fit lg:sticky lg:top-20 shadow-2xs"
+          >
             {selectedInquiry ? (
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                   <h4 className="text-xs font-black uppercase tracking-wider text-[#0b3663]">
                     Lead Details
                   </h4>
-                  <span className="text-[10px] text-slate-400 font-mono">
-                    Source: {selectedInquiry.source}
-                  </span>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-[10px] text-slate-400 font-mono">
+                      {selectedInquiry.source}
+                    </span>
+                    <button
+                      onClick={() => setSelectedInquiry(null)}
+                      className="text-xs font-bold text-slate-400 hover:text-slate-800 p-1 lg:hidden"
+                    >
+                      ✕ Close
+                    </button>
+                  </div>
                 </div>
 
                 <div className="space-y-3 text-xs">
@@ -306,7 +325,7 @@ export default function AdminInquiriesPage() {
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div>
                       <label className="text-[10px] font-bold uppercase text-slate-400 block">
                         Phone / Mobile
@@ -360,7 +379,7 @@ export default function AdminInquiriesPage() {
                     <label className="text-[10px] font-bold uppercase text-slate-400 block">
                       Customer Message / Requirements
                     </label>
-                    <div className="p-3 bg-slate-50 border border-slate-200 mt-1 text-slate-700 whitespace-pre-wrap leading-relaxed">
+                    <div className="p-3 bg-slate-50 border border-slate-200 mt-1 text-slate-700 whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto">
                       {selectedInquiry.message}
                     </div>
                   </div>
@@ -386,10 +405,10 @@ export default function AdminInquiriesPage() {
                 </div>
               </div>
             ) : (
-              <div className="py-12 text-center text-slate-400">
+              <div className="py-8 sm:py-12 text-center text-slate-400">
                 <User className="w-8 h-8 mx-auto mb-2 text-slate-300" />
                 <p className="text-xs font-semibold">
-                  Select an inquiry from the list to view complete details and update status
+                  Select an inquiry to view details & status
                 </p>
               </div>
             )}

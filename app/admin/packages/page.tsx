@@ -244,10 +244,10 @@ export default function AdminPackagesPage() {
   );
 
   return (
-    <AdminShell title="Tour Packages Management">
-      <div className="space-y-6">
+    <AdminShell title="Tour Packages">
+      <div className="space-y-4 sm:space-y-6">
         {/* Actions Bar */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-4 border border-slate-200">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 border border-slate-200 shadow-2xs">
           <div className="relative flex-1 max-w-md">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
@@ -261,19 +261,19 @@ export default function AdminPackagesPage() {
 
           <button
             onClick={openNewModal}
-            className="flex items-center justify-center space-x-1.5 bg-[#0b3663] hover:bg-[#00a8e8] text-white px-4 py-2.5 text-xs font-black uppercase tracking-wider transition-colors"
+            className="flex items-center justify-center space-x-1.5 bg-[#0b3663] hover:bg-[#00a8e8] text-white px-4 py-2.5 text-xs font-black uppercase tracking-wider transition-colors shadow-2xs"
           >
             <Plus className="w-4 h-4" />
-            <span>Add New Tour Package</span>
+            <span>Add Tour Package</span>
           </button>
         </div>
 
         {/* Packages Grid / Table */}
-        <div className="bg-white border border-slate-200">
+        <div className="bg-white border border-slate-200 shadow-2xs">
           {loading ? (
             <div className="p-12 text-center text-slate-400">
               <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2 text-[#00a8e8]" />
-              <p className="text-xs font-semibold">Loading tour packages from database...</p>
+              <p className="text-xs font-semibold">Loading tour packages...</p>
             </div>
           ) : filtered.length === 0 ? (
             <div className="p-12 text-center text-slate-400">
@@ -288,23 +288,23 @@ export default function AdminPackagesPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs min-w-[680px]">
                 <thead className="bg-slate-100 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
                   <tr>
-                    <th className="py-3 px-4">Image</th>
-                    <th className="py-3 px-4">Package Title</th>
-                    <th className="py-3 px-4">Destination</th>
-                    <th className="py-3 px-4">Duration</th>
-                    <th className="py-3 px-4">Price</th>
-                    <th className="py-3 px-4">Badge / Status</th>
-                    <th className="py-3 px-4 text-right">Actions</th>
+                    <th className="py-3 px-3 sm:px-4">Image</th>
+                    <th className="py-3 px-3 sm:px-4">Package Title</th>
+                    <th className="py-3 px-3 sm:px-4">Destination</th>
+                    <th className="py-3 px-3 sm:px-4">Duration</th>
+                    <th className="py-3 px-3 sm:px-4">Price</th>
+                    <th className="py-3 px-3 sm:px-4">Badge / Status</th>
+                    <th className="py-3 px-3 sm:px-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {filtered.map((pkg) => (
                     <tr key={pkg.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="py-3 px-4">
-                        <div className="w-14 h-10 bg-slate-100 border border-slate-200 overflow-hidden relative">
+                      <td className="py-3 px-3 sm:px-4">
+                        <div className="w-12 h-9 sm:w-14 sm:h-10 bg-slate-100 border border-slate-200 overflow-hidden relative">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={pkg.image}
@@ -313,34 +313,34 @@ export default function AdminPackagesPage() {
                           />
                         </div>
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-3 sm:px-4">
                         <div className="font-bold text-slate-900">{pkg.title}</div>
                         <div className="text-[10px] text-slate-400 font-mono">
                           slug: {pkg.slug}
                         </div>
                       </td>
-                      <td className="py-3 px-4 font-medium text-slate-700">
+                      <td className="py-3 px-3 sm:px-4 font-medium text-slate-700">
                         {pkg.destination}
                       </td>
-                      <td className="py-3 px-4 text-slate-600">{pkg.duration}</td>
-                      <td className="py-3 px-4 font-bold text-[#0b3663]">
+                      <td className="py-3 px-3 sm:px-4 text-slate-600">{pkg.duration}</td>
+                      <td className="py-3 px-3 sm:px-4 font-bold text-[#0b3663]">
                         {pkg.price}
                       </td>
-                      <td className="py-3 px-4">
-                        <div className="flex items-center space-x-1">
+                      <td className="py-3 px-3 sm:px-4">
+                        <div className="flex flex-wrap items-center gap-1">
                           {pkg.badge && (
-                            <span className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border border-red-200">
+                            <span className="px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border border-red-200">
                               {pkg.badge}
                             </span>
                           )}
                           {pkg.featured && (
-                            <span className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-sky-50 text-[#00a8e8] border border-sky-200">
+                            <span className="px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-sky-50 text-[#00a8e8] border border-sky-200">
                               Homepage
                             </span>
                           )}
                         </div>
                       </td>
-                      <td className="py-3 px-4 text-right space-x-2">
+                      <td className="py-3 px-3 sm:px-4 text-right space-x-1.5">
                         <button
                           onClick={() => openEditModal(pkg)}
                           className="p-1.5 bg-slate-100 hover:bg-[#00a8e8] hover:text-white text-slate-700 transition-colors"
@@ -366,10 +366,10 @@ export default function AdminPackagesPage() {
 
         {/* Edit / Create Modal */}
         {isModalOpen && editingPkg && (
-          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-            <div className="bg-white border border-slate-300 w-full max-w-3xl my-8 p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-6 sticky top-0 bg-white z-10">
-                <h3 className="text-base font-black uppercase tracking-wider text-[#0b3663]">
+          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-start sm:items-center justify-center p-2 sm:p-4 overflow-y-auto">
+            <div className="bg-white border border-slate-300 w-full max-w-3xl my-2 sm:my-8 p-4 sm:p-6 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+              <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-200 mb-4 sm:mb-6 sticky top-0 bg-white z-10">
+                <h3 className="text-sm sm:text-base font-black uppercase tracking-wider text-[#0b3663]">
                   {editingPkg.id ? "Edit Tour Package" : "Create New Tour Package"}
                 </h3>
                 <button
@@ -387,7 +387,7 @@ export default function AdminPackagesPage() {
               )}
 
               <form onSubmit={handleSave} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                       Package Title *
@@ -428,7 +428,7 @@ export default function AdminPackagesPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                       Destination Country / City *
@@ -478,7 +478,7 @@ export default function AdminPackagesPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                       Badge Text
@@ -509,7 +509,7 @@ export default function AdminPackagesPage() {
                     />
                   </div>
 
-                  <div className="flex items-center pt-5">
+                  <div className="flex items-center pt-2 sm:pt-5">
                     <label className="flex items-center space-x-2 cursor-pointer">
                       <input
                         type="checkbox"
@@ -526,7 +526,7 @@ export default function AdminPackagesPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                       Category / Tour Features Subtitle
@@ -585,13 +585,13 @@ export default function AdminPackagesPage() {
                 </div>
 
                 {/* Inclusions / Exclusions / Highlights (1 item per line) */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-slate-200 pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 border-t border-slate-200 pt-4">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                       Included Items (1 per line)
                     </label>
                     <textarea
-                      rows={4}
+                      rows={3}
                       value={includedStr}
                       onChange={(e) => setIncludedStr(e.target.value)}
                       className="w-full text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663] font-sans"
@@ -604,7 +604,7 @@ export default function AdminPackagesPage() {
                       Excluded Items (1 per line)
                     </label>
                     <textarea
-                      rows={4}
+                      rows={3}
                       value={excludedStr}
                       onChange={(e) => setExcludedStr(e.target.value)}
                       className="w-full text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663] font-sans"
@@ -617,7 +617,7 @@ export default function AdminPackagesPage() {
                       Highlights (1 per line)
                     </label>
                     <textarea
-                      rows={4}
+                      rows={3}
                       value={highlightsStr}
                       onChange={(e) => setHighlightsStr(e.target.value)}
                       className="w-full text-xs px-3 py-2 border border-slate-300 focus:outline-none focus:border-[#0b3663] font-sans"
@@ -627,7 +627,7 @@ export default function AdminPackagesPage() {
                 </div>
 
                 {/* Footer buttons */}
-                <div className="flex items-center justify-end space-x-3 pt-6 border-t border-slate-200">
+                <div className="flex items-center justify-end space-x-3 pt-4 sm:pt-6 border-t border-slate-200">
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
@@ -638,7 +638,7 @@ export default function AdminPackagesPage() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="px-6 py-2 bg-[#0b3663] hover:bg-[#00a8e8] text-white text-xs font-black uppercase tracking-widest transition-colors flex items-center space-x-2 disabled:opacity-50"
+                    className="px-5 sm:px-6 py-2 bg-[#0b3663] hover:bg-[#00a8e8] text-white text-xs font-black uppercase tracking-widest transition-colors flex items-center space-x-2 disabled:opacity-50 shadow-2xs"
                   >
                     {saving ? (
                       <>

@@ -15,6 +15,7 @@ export default function AdminShell({
 }) {
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -42,7 +43,7 @@ export default function AdminShell({
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center text-white">
+      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center text-white px-4 text-center">
         <Loader2 className="w-10 h-10 animate-spin text-[#00a8e8] mb-3" />
         <p className="text-xs uppercase font-mono tracking-widest text-slate-400">
           Verifying Admin Credentials...
@@ -56,14 +57,24 @@ export default function AdminShell({
   }
 
   return (
-    <div className="min-h-screen flex bg-slate-100">
-      <AdminSidebar />
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
-        <AdminHeader title={title} />
-        <main className="p-6 flex-1 overflow-y-auto">
+    <div className="min-h-screen flex bg-slate-100 antialiased selection:bg-[#00a8e8] selection:text-white">
+      {/* Sidebar with Desktop and Mobile Drawer modes */}
+      <AdminSidebar
+        mobileOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
+
+      {/* Main Body */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-x-hidden">
+        <AdminHeader
+          title={title}
+          onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
+        />
+        <main className="p-3 sm:p-5 md:p-6 flex-1 overflow-y-auto w-full min-w-0">
           {children}
         </main>
       </div>
     </div>
   );
 }
+

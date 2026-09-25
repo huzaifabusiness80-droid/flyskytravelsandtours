@@ -161,10 +161,10 @@ export default function AdminDestinationsPage() {
   );
 
   return (
-    <AdminShell title="Destinations Management">
-      <div className="space-y-6">
+    <AdminShell title="Destinations">
+      <div className="space-y-4 sm:space-y-6">
         {/* Top bar */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-4 border border-slate-200">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 border border-slate-200 shadow-2xs">
           <div className="relative flex-1 max-w-md">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
@@ -178,7 +178,7 @@ export default function AdminDestinationsPage() {
 
           <button
             onClick={openNewModal}
-            className="flex items-center justify-center space-x-1.5 bg-[#0b3663] hover:bg-[#00a8e8] text-white px-4 py-2.5 text-xs font-black uppercase tracking-wider transition-colors"
+            className="flex items-center justify-center space-x-1.5 bg-[#0b3663] hover:bg-[#00a8e8] text-white px-4 py-2.5 text-xs font-black uppercase tracking-wider transition-colors shadow-2xs"
           >
             <Plus className="w-4 h-4" />
             <span>Add Destination</span>
@@ -187,21 +187,21 @@ export default function AdminDestinationsPage() {
 
         {/* Grid of destinations */}
         {loading ? (
-          <div className="bg-white border border-slate-200 p-12 text-center text-slate-400">
+          <div className="bg-white border border-slate-200 p-12 text-center text-slate-400 shadow-2xs">
             <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2 text-[#00a8e8]" />
             <p className="text-xs font-semibold">Loading destinations from database...</p>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="bg-white border border-slate-200 p-12 text-center text-slate-400">
+          <div className="bg-white border border-slate-200 p-12 text-center text-slate-400 shadow-2xs">
             <MapPin className="w-10 h-10 mx-auto mb-2 text-slate-300" />
             <p className="text-xs font-semibold">No destinations configured</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {filtered.map((dest) => (
               <div
                 key={dest.id}
-                className="bg-white border border-slate-200 overflow-hidden flex flex-col group hover:border-[#00a8e8] transition-all"
+                className="bg-white border border-slate-200 overflow-hidden flex flex-col group hover:border-[#00a8e8] transition-all shadow-2xs"
               >
                 <div className="h-40 bg-slate-100 relative overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -222,7 +222,7 @@ export default function AdminDestinationsPage() {
                   </div>
                 </div>
 
-                <div className="p-4 flex-1 flex flex-col justify-between">
+                <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between">
                   <div>
                     <h4 className="text-sm font-black uppercase text-slate-900 tracking-wide">
                       {dest.name}
@@ -261,17 +261,17 @@ export default function AdminDestinationsPage() {
 
         {/* Edit / Create Modal */}
         {isModalOpen && editingDest && (
-          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-white border border-slate-300 w-full max-w-lg p-6 shadow-2xl relative">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
-                <h3 className="text-sm font-black uppercase tracking-wider text-[#0b3663]">
+          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-start sm:items-center justify-center p-2 sm:p-4 overflow-y-auto">
+            <div className="bg-white border border-slate-300 w-full max-w-lg my-2 sm:my-8 p-4 sm:p-6 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-4 sticky top-0 bg-white z-10">
+                <h3 className="text-sm sm:text-base font-black uppercase tracking-wider text-[#0b3663]">
                   {editingDest.id ? "Edit Destination" : "Add New Destination"}
                 </h3>
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="p-1 text-slate-400 hover:text-slate-800 transition-colors"
+                  className="p-1.5 text-slate-400 hover:text-slate-800 transition-colors rounded"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
 
@@ -282,7 +282,7 @@ export default function AdminDestinationsPage() {
               )}
 
               <form onSubmit={handleSave} className="space-y-4">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                       City / Place Name *
@@ -316,7 +316,7 @@ export default function AdminDestinationsPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                       Packages Count
@@ -335,7 +335,7 @@ export default function AdminDestinationsPage() {
                     />
                   </div>
 
-                  <div className="flex items-center pt-5">
+                  <div className="flex items-center pt-2 sm:pt-5">
                     <label className="flex items-center space-x-2 cursor-pointer">
                       <input
                         type="checkbox"
@@ -365,7 +365,7 @@ export default function AdminDestinationsPage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                       Visa Type / Category Subtitle
@@ -397,7 +397,7 @@ export default function AdminDestinationsPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                       Highlight Tag / Key Feature
@@ -448,14 +448,14 @@ export default function AdminDestinationsPage() {
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="px-3 py-2 border border-slate-300 text-slate-700 text-xs font-bold uppercase"
+                    className="px-4 py-2 border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-bold uppercase transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={saving}
-                    className="px-5 py-2 bg-[#0b3663] hover:bg-[#00a8e8] text-white text-xs font-black uppercase tracking-wider flex items-center space-x-1.5"
+                    className="px-5 py-2 bg-[#0b3663] hover:bg-[#00a8e8] text-white text-xs font-black uppercase tracking-wider flex items-center space-x-1.5 transition-colors shadow-2xs"
                   >
                     {saving ? (
                       <>
